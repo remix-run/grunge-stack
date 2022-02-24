@@ -1,4 +1,5 @@
 import {
+  json,
   Links,
   LiveReload,
   Meta,
@@ -6,16 +7,30 @@ import {
   Scripts,
   ScrollRestoration,
 } from "remix";
-import type { LinksFunction } from "remix";
-import globalStyles from "./styles/global.css";
+import type { LinksFunction, MetaFunction, LoaderFunction } from "remix";
+
+import appStyles from "./styles/app.css";
+import { getUser } from "./session.server";
 
 export const links: LinksFunction = () => {
-  return [
-    {
-      rel: "stylesheet",
-      href: globalStyles,
-    },
-  ];
+  return [{ rel: "stylesheet", href: appStyles }];
+};
+
+export const meta: MetaFunction = () => {
+  return {
+    title: "Remix Notes",
+    viewport: "width=device-width,initial-scale=1",
+  };
+};
+
+type LoaderData = {
+  user: Awaited<ReturnType<typeof getUser>>;
+};
+
+export let loader: LoaderFunction = async ({ request }) => {
+  return json<LoaderData>({
+    user: await getUser(request),
+  });
 };
 
 export default function App() {
@@ -23,12 +38,13 @@ export default function App() {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
       </head>
       <body>
-        <Outlet />
+        <div>
+          <Outlet />
+        </div>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

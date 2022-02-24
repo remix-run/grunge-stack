@@ -1,6 +1,8 @@
 import type { Session } from "remix";
-import { redirect, createArcTableSessionStorage } from "remix";
+import { redirect } from "remix";
+import { createArcTableSessionStorage } from "@remix-run/architect";
 import invariant from "tiny-invariant";
+import { User } from "./models/user.server";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
@@ -21,32 +23,44 @@ export const sessionStorage = createArcTableSessionStorage({
 
 const USER_SESSION_KEY = "userId";
 
-export async function getSession(
-  input: string | Request | null
-): Promise<Session> {
-  const cookieHeader =
-    input instanceof Request ? input.headers.get("Cookie") : input;
-
-  return sessionStorage.getSession(cookieHeader);
+export async function getSession(request: Request) {
+  return sessionStorage.getSession(request.headers.get("Cookie"));
 }
 
 export async function getUserId(request: Request) {
+  console.log(request.headers.get("Cookie"));
   const session = await getSession(request);
+  console.log(session);
   const user = session.get(USER_SESSION_KEY);
+  console.log({ user });
   if (!user) return null;
   return user;
+}
+
+export async function getUser(request: Request): Promise<User | null> {
+  const userId = await getUserId(request);
+  if (!userId) return null;
+  return { id: userId };
+}
+
+export async function requireUserId(
+  request: Request,
+  redirectTo: string = new URL(request.url).pathname
+) {
+  const userId = await getUserId(request);
+  if (!userId) {
+    const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
+    throw redirect(`/login?${searchParams}`);
+  }
+  return userId;
 }
 
 export async function requireUser(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
-) {
-  const user = await getUserId(request);
-  if (!user) {
-    const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
-    throw redirect(`/login?${searchParams}`);
-  }
-  return user;
+): Promise<User> {
+  const userId = await requireUserId(request, redirectTo);
+  return { id: userId };
 }
 
 export async function createUserSession(

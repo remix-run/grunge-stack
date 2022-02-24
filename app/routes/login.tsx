@@ -1,12 +1,18 @@
 import * as React from "react";
 import type { ActionFunction, LoaderFunction, MetaFunction } from "remix";
-import { useSearchParams } from "remix";
-import { Form, json, Link, useActionData } from "remix";
-import { redirect } from "remix";
+import {
+  Form,
+  json,
+  Link,
+  useActionData,
+  redirect,
+  useSearchParams,
+} from "remix";
 import Alert from "@reach/alert";
 
 import { createUserSession, getUserId } from "~/session.server";
-import { verifyLogin } from "~/models/user";
+import { verifyLogin } from "~/models/user.server";
+import { validateEmail } from "~/utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -15,7 +21,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 interface ActionData {
-  errors: {
+  errors?: {
     email?: string;
     password?: string;
   };
@@ -23,18 +29,18 @@ interface ActionData {
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
-
   const email = formData.get("email");
   const password = formData.get("password");
+  const redirectTo = formData.get("redirectTo");
 
-  if (typeof email !== "string") {
+  if (!validateEmail(email)) {
     return json<ActionData>(
-      { errors: { email: "Email is required" } },
+      { errors: { email: "Email is invalid" } },
       { status: 400 }
     );
   }
 
-  if (typeof password !== "string") {
+  if (typeof password !== "string" || password.length === 0) {
     return json<ActionData>(
       { errors: { password: "Password is required" } },
       { status: 400 }
@@ -50,16 +56,22 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  return createUserSession(request, user.pk, "/");
+  return createUserSession(
+    request,
+    user.id,
+    typeof redirectTo === "string" ? redirectTo : "/"
+  );
 };
 
-export const meta: MetaFunction = () => ({
-  title: "Login",
-});
+export const meta: MetaFunction = () => {
+  return {
+    title: "Login",
+  };
+};
 
 export default function LoginPage() {
   const [searchParams] = useSearchParams();
-  const returnTo = searchParams.get("redirectTo") ?? undefined;
+  const redirectTo = searchParams.get("redirectTo") ?? undefined;
   const actionData = useActionData<ActionData>();
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
@@ -74,13 +86,13 @@ export default function LoginPage() {
 
   return (
     <>
-      <h1>Login</h1>
+      <h1>Sign in to your account</h1>
       <Form
         method="post"
         style={{ display: "flex", flexDirection: "column", gap: 8 }}
       >
+        <input type="hidden" name="redirectTo" value={redirectTo} />
         <div>
-          <input type="hidden" name="redirectTo" value={returnTo} />
           <label>
             <span>Email address</span>
             <input
@@ -121,9 +133,8 @@ export default function LoginPage() {
             </Alert>
           )}
         </div>
-
         <div>
-          <button type="submit">Log in</button>
+          <button type="submit">Sign in</button>
         </div>
       </Form>
 
@@ -132,7 +143,7 @@ export default function LoginPage() {
         <Link
           to={{
             pathname: "/join",
-            search: returnTo ? `?returnTo=${returnTo}` : undefined,
+            search: redirectTo ? `?redirectTo=${redirectTo}` : undefined,
           }}
         >
           Sign up

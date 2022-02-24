@@ -1,32 +1,42 @@
 import cuid from "cuid";
 import arc from "@architect/functions";
 
-export async function getNotes(email: string) {
+export type Note = {
+  id: string;
+  userId: string;
+  title: string;
+  body: string;
+};
+
+export async function getNotes(userId: string): Promise<Array<Note>> {
   const db = await arc.tables();
 
   const result = await db.notes.query({
     KeyConditionExpression: "pk = :pk",
-    ExpressionAttributeValues: { ":pk": email },
+    ExpressionAttributeValues: { ":pk": userId },
   });
 
-  return result.Items;
+  return result.Items.map((n: any) => ({
+    title: n.title,
+    body: n.body,
+    userId: n.pk,
+    id: n.sk,
+  }));
 }
 
 export async function createNote({
   title,
   body,
-  email,
+  userId,
 }: {
   title: string;
   body: string;
-  email: string;
+  userId: string;
 }) {
   const db = await arc.tables();
 
   return db.notes.put({
-    // our primary key is the email
-    // and it already has the `email#` prefix
-    pk: email,
+    pk: userId,
     sk: `note#${cuid()}`,
     title: title,
     body: body,
@@ -34,12 +44,12 @@ export async function createNote({
 }
 
 export async function deleteNote({
-  noteId,
-  email,
+  id,
+  userId,
 }: {
-  noteId: string;
-  email: string;
+  id: string;
+  userId: string;
 }) {
   const db = await arc.tables();
-  return db.notes.delete({ pk: email, sk: noteId });
+  return db.notes.delete({ pk: userId, sk: id });
 }
