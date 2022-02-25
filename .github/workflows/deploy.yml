@@ -101,6 +101,7 @@ jobs:
           wait-on: "http://localhost:8811"
         env:
           PORT: "8811"
+          ENABLE_TEST_ROUTES: true
 
   deploy:
     needs: [lint, typecheck, vitest, cypress]
