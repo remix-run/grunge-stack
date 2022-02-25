@@ -108,7 +108,7 @@ jobs:
           PORT: "8811"
 
   deploy:
-    needs: [lint, typecheck, vitest, cypress, build]
+    needs: [lint, typecheck, vitest, cypress]
     runs-on: ubuntu-latest
 
     steps:
