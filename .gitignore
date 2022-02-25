@@ -4,5 +4,7 @@ node_modules
 preferences.arc
 sam.json
 sam.yaml
+/cypress/videos
+/cypress/screenshots
 
 .env

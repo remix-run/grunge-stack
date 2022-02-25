@@ -13,7 +13,6 @@
     "lint": "eslint --cache-location ./node_modules/.cache/eslint .",
     "typecheck": "tsc -b && tsc -b cypress",
     "test": "vitest",
-    "start:mocks": "cross-env NODE_ENV=production node --require ./mocks --require dotenv/config ./node_modules/.bin/remix-serve build",
     "test:e2e:dev": "start-server-and-test dev http://localhost:3333 'cypress open'",
     "test:e2e:run": "cross-env PORT=8811 start-server-and-test dev http://localhost:8811 'cypress run'"
   },
