@@ -1,4 +1,4 @@
-name: Deploy
+name: 🚀 Deploy
 
 on: push
 
@@ -7,20 +7,123 @@ defaults:
     shell: bash
 
 jobs:
-  build:
+  lint:
+    name: ⬣ ESLint
     runs-on: ubuntu-latest
-
-    # Go
     steps:
-      - name: Check out repo
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
+      - name: ⎔ Setup node
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
 
-      - name: Env
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🔬 Lint
+        run: npm run lint
+
+  typecheck:
+    name: ʦ TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v2
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: 🔎 Type check
+        run: npm run typecheck
+
+  vitest:
+    name: ⚡ Vitest
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v2
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: ⚡ Run vitest
+        run: npm run test -- --coverage
+
+  cypress:
+    name: ⚫️ Cypress
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v2
+
+      - name: 🏄 Copy test env vars
+        run: cp .env.example .env
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
+
+      - name: ⚙️ Build
+        run: npm run build
+
+      - name: 🐳 Docker compose
+        run: docker-compose up -d && sleep 3 && npx prisma migrate reset --force
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
+
+      - name: 🌳 Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm run start:mocks
+          wait-on: "http://localhost:8811"
+        env:
+          PORT: "8811"
+
+  deploy:
+    needs: [lint, typecheck, vitest, cypress, build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v2
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+
+      - name: 👀 Env
         run: |
           echo "Event name: ${{ github.event_name }}"
           echo "Git ref:    ${{ github.ref }}"
@@ -29,38 +132,16 @@ jobs:
           VER=`node --version`; echo "Node ver:   $VER"
           VER=`npm --version`; echo "npm ver:    $VER"
 
-      - name: Install
-        run: npm ci
+      - name: 📥 Download deps
+        uses: bahmutov/npm-install@v1
 
-      - name: Build
+      - name: 🏗 Build
         run: npm run build
 
-  # Assuming all that went fine (and it's main): deploy!
-  deploy:
-    # Setup
-    needs: build
-    runs-on: ubuntu-latest
-
-    # Go
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: Install
-        run: npm i
-
-      - name: Build
-        run: npm run build
-
-      - name: Install Arc
+      - name: 🛠 Install Arc
         run: npm i -g @architect/architect
 
-      - name: Staging Deploy
+      - name: 🚀 Staging Deploy
         if: github.ref == 'refs/heads/dev'
         run: arc deploy --staging
         env:
@@ -68,7 +149,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Production Deploy
+      - name: 🚀 Production Deploy
         if: github.ref == 'refs/heads/main'
         run: arc deploy --production
         env:
