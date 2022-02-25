@@ -36,11 +36,7 @@ function login({
   email?: string;
 } = {}) {
   cy.then(() => ({ email })).as("user");
-  cy.exec(
-    `node --require esbuild-register ./cypress/support/create-user.ts "${email}"`
-  ).then(({ stdout }) => {
-    cy.setCookie("__session", stdout.trim());
-  });
+  cy.request("POST", "/__tests/create-user", { email });
   return cy.get("@user");
 }
 
@@ -58,10 +54,12 @@ function cleanupUser({ email }: { email?: string } = {}) {
 }
 
 function deleteUserByEmail(email: string) {
-  cy.exec(
-    `node --require esbuild-register ./cypress/support/delete-user.ts "${email}"`
-  );
-  cy.clearCookie("__session");
+  cy.request({
+    method: "POST",
+    body: { email },
+    url: "/__tests/delete-user",
+    followRedirect: true,
+  });
 }
 
 Cypress.Commands.add("login", login);

@@ -9,16 +9,12 @@ remix-aws-stack
 @static
 
 @tables
-people
+user
   pk *String  # email
 
 password
   pk *String # user's email
 
-notes
+note
   pk *String  # user's email
   sk **String # noteId
-
-arc-sessions
-  _idx *String
-  _ttl TTL

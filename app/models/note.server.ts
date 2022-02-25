@@ -11,7 +11,7 @@ export type Note = {
 export async function getNotes(userId: string): Promise<Array<Note>> {
   const db = await arc.tables();
 
-  const result = await db.notes.query({
+  const result = await db.note.query({
     KeyConditionExpression: "pk = :pk",
     ExpressionAttributeValues: { ":pk": userId },
   });
@@ -35,7 +35,7 @@ export async function createNote({
 }) {
   const db = await arc.tables();
 
-  return db.notes.put({
+  return db.note.put({
     pk: userId,
     sk: `note#${cuid()}`,
     title: title,
@@ -51,5 +51,5 @@ export async function deleteNote({
   userId: string;
 }) {
   const db = await arc.tables();
-  return db.notes.delete({ pk: userId, sk: id });
+  return db.note.delete({ pk: userId, sk: id });
 }

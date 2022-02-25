@@ -7,14 +7,14 @@
     "postinstall": "remix setup node",
     "build": "remix build",
     "dev:remix": "remix watch",
-    "dev:arc": "node --require ./mocks ./node_modules/.bin/arc sandbox",
-    "dev": "cross-env ARC_LOCAL=1 ARC_TABLES_PORT=5555 run-p dev:*",
+    "dev:arc": "cross-env ARC_LOCAL=1 ARC_TABLES_PORT=5555 node --require ./mocks ./node_modules/.bin/arc sandbox",
+    "dev": "run-p dev:*",
     "format": "prettier --write .",
     "lint": "eslint --cache-location ./node_modules/.cache/eslint .",
     "typecheck": "tsc -b && tsc -b cypress",
     "test": "vitest",
-    "test:e2e:dev": "start-server-and-test dev http://localhost:3333 'cypress open'",
-    "test:e2e:run": "cross-env PORT=8811 start-server-and-test dev http://localhost:8811 'cypress run'"
+    "test:e2e:dev": "cross-env ENABLE_TEST_ROUTES=true start-server-and-test dev http://localhost:3333 'cypress open'",
+    "test:e2e:run": "cross-env PORT=8811 ENABLE_TEST_ROUTES=true start-server-and-test dev http://localhost:8811 'cypress run'"
   },
   "dependencies": {
     "@architect/functions": "^4.1.2",

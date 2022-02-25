@@ -1,14 +1,10 @@
-import { redirect } from "remix";
-import { createArcTableSessionStorage } from "@remix-run/architect";
+import { createCookieSessionStorage, redirect } from "remix";
 import invariant from "tiny-invariant";
-import type { User } from "./models/user.server";
+import { getUserById } from "./models/user.server";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
-export const sessionStorage = createArcTableSessionStorage({
-  table: "arc-sessions",
-  ttl: "_ttl",
-  idx: "_idx",
+export const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "__session",
     httpOnly: true,
@@ -28,15 +24,14 @@ export async function getSession(request: Request) {
 
 export async function getUserId(request: Request) {
   const session = await getSession(request);
-  const user = session.get(USER_SESSION_KEY);
-  if (!user) return null;
-  return user;
+  const userId = session.get(USER_SESSION_KEY);
+  return userId;
 }
 
-export async function getUser(request: Request): Promise<User | null> {
+export async function getUser(request: Request) {
   const userId = await getUserId(request);
   if (!userId) return null;
-  return { id: userId };
+  return getUserById(userId);
 }
 
 export async function requireUserId(
@@ -51,12 +46,9 @@ export async function requireUserId(
   return userId;
 }
 
-export async function requireUser(
-  request: Request,
-  redirectTo: string = new URL(request.url).pathname
-): Promise<User> {
-  const userId = await requireUserId(request, redirectTo);
-  return { id: userId };
+export async function requireUser(request: Request) {
+  const userId = await requireUserId(request);
+  return getUserById(userId);
 }
 
 export async function createUserSession(
@@ -75,7 +67,7 @@ export async function createUserSession(
 
 export async function logout(request: Request) {
   const session = await getSession(request);
-  return redirect("/login", {
+  return redirect("/", {
     headers: {
       "Set-Cookie": await sessionStorage.destroySession(session),
     },
