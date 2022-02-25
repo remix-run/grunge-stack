@@ -10,7 +10,8 @@ import {
 import type { ActionFunction, LoaderFunction } from "remix";
 import Alert from "@reach/alert";
 
-import { createNote, deleteNote, getNotes, Note } from "~/models/note.server";
+import type { Note } from "~/models/note.server";
+import { createNote, deleteNote, getNotes } from "~/models/note.server";
 import { requireUserId } from "~/session.server";
 
 type LoaderData = {

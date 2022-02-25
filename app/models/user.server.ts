@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 export type User = { id: string };
 export type Password = { password: string };
 
-async function getUserByEmail(email: string) {
+export async function getUserByEmail(email: string) {
   const db = await arc.tables();
   const result = await db.people.query({
     KeyConditionExpression: "pk = :pk",
@@ -24,7 +24,7 @@ async function getUserPasswordByEmail(email: string) {
   return result.Items[0] as Password;
 }
 
-async function createUser(email: string, password: string) {
+export async function createUser(email: string, password: string) {
   const hashedPassword = await bcrypt.hash(password, 10);
   const db = await arc.tables();
   await db.password.put({
@@ -41,7 +41,13 @@ async function createUser(email: string, password: string) {
   return user;
 }
 
-async function verifyLogin(email: string, password: string) {
+export async function deleteUser(email: string) {
+  const db = await arc.tables();
+  await db.password.delete({ pk: `email#${email}` });
+  await db.people.delete({ pk: `email#${email}` });
+}
+
+export async function verifyLogin(email: string, password: string) {
   const userPassword = await getUserPasswordByEmail(email);
 
   if (!userPassword) {
@@ -55,5 +61,3 @@ async function verifyLogin(email: string, password: string) {
 
   return getUserByEmail(email);
 }
-
-export { getUserByEmail, createUser, verifyLogin };

@@ -1,8 +1,7 @@
-import type { Session } from "remix";
 import { redirect } from "remix";
 import { createArcTableSessionStorage } from "@remix-run/architect";
 import invariant from "tiny-invariant";
-import { User } from "./models/user.server";
+import type { User } from "./models/user.server";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
@@ -28,11 +27,8 @@ export async function getSession(request: Request) {
 }
 
 export async function getUserId(request: Request) {
-  console.log(request.headers.get("Cookie"));
   const session = await getSession(request);
-  console.log(session);
   const user = session.get(USER_SESSION_KEY);
-  console.log({ user });
   if (!user) return null;
   return user;
 }
