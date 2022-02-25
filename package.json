@@ -17,6 +17,7 @@
     "test:e2e:run": "cross-env PORT=8811 ENABLE_TEST_ROUTES=true start-server-and-test dev http://localhost:8811 'cypress run'"
   },
   "dependencies": {
+    "@architect/architect": "^8.3.7",
     "@architect/functions": "^4.1.2",
     "@reach/alert": "^0.16.0",
     "@remix-run/architect": "*",
@@ -29,7 +30,6 @@
     "tiny-invariant": "^1.2.0"
   },
   "devDependencies": {
-    "@architect/architect": "^10.0.2",
     "@faker-js/faker": "^6.0.0-alpha.7",
     "@remix-run/dev": "*",
     "@remix-run/eslint-config": "*",
