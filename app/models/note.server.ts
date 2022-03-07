@@ -8,6 +8,9 @@ export type Note = {
   body: string;
 };
 
+const skToId = (sk: string) => sk.replace(/^note#/, "");
+const idToSk = (id: string) => `note#${id}`;
+
 export async function getNote({
   userId,
   id,
@@ -17,7 +20,7 @@ export async function getNote({
 }): Promise<Note | null> {
   const db = await arc.tables();
 
-  const result = await await db.note.get({ pk: userId, sk: `note#${id}` });
+  const result = await await db.note.get({ pk: userId, sk: idToSk(id) });
 
   if (result) {
     return {
@@ -44,7 +47,7 @@ export async function getNoteListItems({
 
   return result.Items.map((n: any) => ({
     title: n.title,
-    id: n.sk.replace(/^note#/, ""),
+    id: skToId(n.sk),
   }));
 }
 
@@ -56,16 +59,21 @@ export async function createNote({
   title: string;
   body: string;
   userId: string;
-}) {
+}): Promise<Note> {
   const db = await arc.tables();
 
-  const newNote = {
+  const result = await db.note.put({
     pk: userId,
     sk: `note#${cuid()}`,
     title: title,
     body: body,
+  });
+  return {
+    id: skToId(result.sk),
+    userId: result.pk,
+    title: result.title,
+    body: result.body,
   };
-  return db.note.put(newNote);
 }
 
 export async function deleteNote({
@@ -76,5 +84,5 @@ export async function deleteNote({
   userId: string;
 }) {
   const db = await arc.tables();
-  return db.note.delete({ pk: userId, sk: `note#${id}` });
+  return db.note.delete({ pk: userId, sk: idToSk(id) });
 }
