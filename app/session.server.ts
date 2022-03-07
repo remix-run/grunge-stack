@@ -19,7 +19,8 @@ export const sessionStorage = createCookieSessionStorage({
 const USER_SESSION_KEY = "userId";
 
 export async function getSession(request: Request) {
-  return sessionStorage.getSession(request.headers.get("Cookie"));
+  const cookie = request.headers.get("Cookie");
+  return sessionStorage.getSession(cookie);
 }
 
 export async function getUserId(request: Request) {

@@ -2,7 +2,7 @@ import arc from "@architect/functions";
 import bcrypt from "bcryptjs";
 import invariant from "tiny-invariant";
 
-export type User = { id: string };
+export type User = { id: string; email: string };
 export type Password = { password: string };
 
 export async function getUserById(id: string): Promise<User | null> {
@@ -13,7 +13,7 @@ export async function getUserById(id: string): Promise<User | null> {
   });
 
   const [record] = result.Items;
-  if (record) return { id: record.pk };
+  if (record) return { id: record.pk, email: record.email };
   return null;
 }
 
@@ -41,6 +41,7 @@ export async function createUser(email: string, password: string) {
 
   await db.user.put({
     pk: `email#${email}`,
+    email,
   });
 
   const user = await getUserByEmail(email);

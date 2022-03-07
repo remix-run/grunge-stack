@@ -10,11 +10,11 @@ remix-aws-stack
 
 @tables
 user
-  pk *String  # email
+  pk *String
 
 password
-  pk *String # user's email
+  pk *String # userId
 
 note
-  pk *String  # user's email
+  pk *String  # userId
   sk **String # noteId
