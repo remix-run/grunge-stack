@@ -1,5 +1,5 @@
 @app
-remix-aws-stack
+grunge-stack-template
 
 @http
 /*
