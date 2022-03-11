@@ -13,10 +13,7 @@ import tailwindStylesheetUrl from "./styles/tailwind.css";
 import { getUser } from "./session.server";
 
 export const links: LinksFunction = () => {
-  return [
-    { rel: "stylesheet", href: tailwindStylesheetUrl },
-    { rel: "icon", href: "/_static/favicon.ico" },
-  ];
+  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
 };
 
 export const meta: MetaFunction = () => {
@@ -38,16 +35,14 @@ export let loader: LoaderFunction = async ({ request }) => {
 
 export default function App() {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         <meta charSet="utf-8" />
         <Meta />
         <Links />
       </head>
-      <body className="bg-[url('/_static/background.jpg')] bg-center bg-origin-border bg-no-repeat">
-        <div>
-          <Outlet />
-        </div>
+      <body className="h-full">
+        <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

@@ -7,8 +7,8 @@ function getRandomString(length) {
 }
 
 async function main() {
-  const ENV_PATH = path.join(__dirname, ".env");
-  const APP_ARC_PATH = path.join(__dirname, "./app.arc");
+  const ENV_PATH = path.join(__dirname, "../.env");
+  const APP_ARC_PATH = path.join(__dirname, ".././app.arc");
 
   const DIR_NAME = path.basename(__dirname);
   const SUFFIX = getRandomString(2);
@@ -19,8 +19,10 @@ async function main() {
 
   const appArc = await fs.readFile(APP_ARC_PATH, "utf-8");
 
-  fs.writeFile(APP_ARC_PATH, appArc.replace("grunge-stack-template", APP_NAME));
-
+  await fs.writeFile(
+    APP_ARC_PATH,
+    appArc.replace("grunge-stack-template", APP_NAME)
+  );
   await fs.writeFile(ENV_PATH, env);
 }
 

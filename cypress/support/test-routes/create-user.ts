@@ -24,5 +24,10 @@ export const action: ActionFunction = async ({ request }) => {
 
   const user = await createUser(email, "myreallystrongpassword");
 
-  return createUserSession(request, user.id, "/");
+  return createUserSession({
+    request,
+    userId: user.id,
+    remember: true,
+    redirectTo: "/",
+  });
 };
