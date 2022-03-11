@@ -59,19 +59,19 @@ export default function Index() {
           <div className="mt-6 flex flex-wrap justify-center gap-8">
             {[
               {
-                src: "https://user-images.githubusercontent.com/1500684/157764397-ccd8ea10-b8aa-4772-a99b-35de937319e1.svg",
-                alt: "Fly.io",
-                href: "https://fly.io",
+                src: "https://user-images.githubusercontent.com/1500684/157991167-651c8fc5-2f72-4afa-94d8-2520ecbc5ebc.svg",
+                alt: "AWS",
+                href: "https://aws.com",
               },
               {
-                src: "https://user-images.githubusercontent.com/1500684/157764395-137ec949-382c-43bd-a3c0-0cb8cb22e22d.svg",
-                alt: "SQLite",
-                href: "https://sqlite.org",
+                src: "https://user-images.githubusercontent.com/1500684/157991935-26c0d587-b866-49f5-af34-8f04be1c9df2.svg",
+                alt: "DynamoDB",
+                href: "https://aws.amazon.com/dynamodb/",
               },
               {
-                src: "https://user-images.githubusercontent.com/1500684/157764484-ad64a21a-d7fb-47e3-8669-ec046da20c1f.svg",
-                alt: "Prisma",
-                href: "https://prisma.io",
+                src: "https://user-images.githubusercontent.com/1500684/157990874-31f015c3-2af7-4669-9d61-519e5ecfdea6.svg",
+                alt: "Architect",
+                href: "https://arc.codes",
               },
               {
                 src: "https://user-images.githubusercontent.com/1500684/157764276-a516a239-e377-4a20-b44a-0ac7b65c8c14.svg",
