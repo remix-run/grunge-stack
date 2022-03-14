@@ -7,10 +7,11 @@ function getRandomString(length) {
 }
 
 async function main() {
-  const ENV_PATH = path.join(__dirname, "../.env");
-  const APP_ARC_PATH = path.join(__dirname, ".././app.arc");
+  const ROOT_DIR = path.join(__dirname, '..')
+  const ENV_PATH = path.join(ROOT_DIR, ".env");
+  const APP_ARC_PATH = path.join(ROOT_DIR, "./app.arc");
 
-  const DIR_NAME = path.basename(__dirname);
+  const DIR_NAME = path.basename(ROOT_DIR);
   const SUFFIX = getRandomString(2);
   const APP_NAME = DIR_NAME + "-" + SUFFIX;
 
