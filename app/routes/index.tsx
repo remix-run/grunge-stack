@@ -11,8 +11,8 @@ export default function Index() {
             <div className="absolute inset-0">
               <img
                 className="h-full w-full object-cover"
-                src="https://user-images.githubusercontent.com/1500684/157981653-025000c8-7893-48d0-803a-d76ed5829891.jpg"
-                alt="Band playing grunge music"
+                src="https://user-images.githubusercontent.com/1500684/158276318-61064670-06c3-43f3-86e3-d624785b8ff7.jpg"
+                alt="Nirvana playing on stage with Kurt's jagstang guitar"
               />
               <div className="absolute inset-0 bg-[color:rgba(255,56,56,0.5)] mix-blend-multiply" />
             </div>
