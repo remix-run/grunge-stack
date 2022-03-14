@@ -13,7 +13,11 @@ import tailwindStylesheetUrl from "./styles/tailwind.css";
 import { getUser } from "./session.server";
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
+  return [
+    { rel: "stylesheet", href: tailwindStylesheetUrl },
+    // NOTE: Architect deploys the public directory to /_static/
+    { rel: "icon", href: "/_static/favicon.ico" },
+  ];
 };
 
 export const meta: MetaFunction = () => {
