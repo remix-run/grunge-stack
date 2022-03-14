@@ -6,12 +6,11 @@ function getRandomString(length) {
   return crypto.randomBytes(length).toString("hex");
 }
 
-async function main() {
-  const ROOT_DIR = path.join(__dirname, '..')
-  const ENV_PATH = path.join(ROOT_DIR, ".env");
-  const APP_ARC_PATH = path.join(ROOT_DIR, "./app.arc");
+async function main({ rootDirectory }) {
+  const ENV_PATH = path.join(rootDirectory, ".env");
+  const APP_ARC_PATH = path.join(rootDirectory, "./app.arc");
 
-  const DIR_NAME = path.basename(ROOT_DIR);
+  const DIR_NAME = path.basename(rootDirectory);
   const SUFFIX = getRandomString(2);
   const APP_NAME = DIR_NAME + "-" + SUFFIX;
 
@@ -27,4 +26,4 @@ async function main() {
   await fs.writeFile(ENV_PATH, env);
 }
 
-void main();
+module.exports = main;
