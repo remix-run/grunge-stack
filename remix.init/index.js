@@ -1,6 +1,7 @@
+const { execSync } = require("child_process");
+const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
-const crypto = require("crypto");
 
 function getRandomString(length) {
   return crypto.randomBytes(length).toString("hex");
@@ -24,6 +25,13 @@ async function main({ rootDirectory }) {
     appArc.replace("grunge-stack-template", APP_NAME)
   );
   await fs.writeFile(ENV_PATH, env);
+
+  console.log(
+    `Running the setup script to make sure everything was set up properly`
+  );
+  execSync(`npm run setup`, { stdio: "inherit", cwd: rootDirectory });
+
+  console.log(`✅  Project is ready! Start development with "npm run dev"`);
 }
 
 module.exports = main;

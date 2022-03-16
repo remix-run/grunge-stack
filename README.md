@@ -1,5 +1,7 @@
 # Remix Grunge Stack
 
+![The Remix Grunge Stack](https://repository-images.githubusercontent.com/463325363/edae4f5b-1a13-47ea-b90c-c05badc2a700)
+
 Learn more about [Remix Stacks](https://remix.run/stacks).
 
 ## What's in the stack
@@ -13,46 +15,31 @@ Learn more about [Remix Stacks](https://remix.run/stacks).
 - End-to-end testing with [Cypress](https://cypress.io)
 - Local third party request mocking with [MSW](https://mswjs.io)
 - Unit testing with [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com)
-- Code formatting with [prettier](https://prettier.io)
+- Code formatting with [Prettier](https://prettier.io)
 - Linting with [ESLint](https://eslint.org)
 - Static Types with [TypeScript](https://typescriptlang.org)
 
 Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --template your/repo`! Make it your own.
 
-## Architect Setup
-
-1. Globally install Architect and the AWS SDK
-2. Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-
-```sh
-npm i -g @architect/architect aws-sdk
-```
-
-2. [Sign up](https://portal.aws.amazon.com/billing/signup#/start) and login to your AWS account
-   - To login with the CLI, you'll need to generate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, you can do so from your [security credentials](https://console.aws.amazon.com/iam/home?region=us-west-2#/security_credentials) and click on the "Access keys" tab, and then click "Create New Access Key", and then download and open the credentials file.
-   - Next, run `aws configure` and paste in your credentials.
-
-## Build
-
-To run the production build for the app, run the following script:
-
-```sh
-npm run build
-```
-
-This should take less than a second ⚡
-
 ## Development
 
-```sh
-npm run dev
-```
+- Initial setup: _If you just generated this project, this step has been done for you._
+
+  ```sh
+  npm run setup
+  ```
+
+- Start dev server:
+
+  ```sh
+  npm run dev
+  ```
 
 This starts your app in development mode, rebuilding assets on file changes.
 
-This is a pretty simple note-taking app, but it's a good example of how you can build a full stack app with Architect and Remix. The main functionality is creating users, logging in and out, and creating and deleting notes.
-
 ### Relevant code:
+
+This is a pretty simple note-taking app, but it's a good example of how you can build a full stack app with Architect and Remix. The main functionality is creating users, logging in and out, and creating and deleting notes.
 
 - creating users, and logging in and out [./app/models/user.server.ts](./app/models/user.server.ts)
 - user sessions, and verifying them [./app/session.server.ts](./app/session.server.ts)
@@ -62,9 +49,21 @@ The database that comes with `arc sandbox` is an in memory database, so if you r
 
 ## Deployment
 
-This Remix Stack comes with two GitHub actions that handle automatically deploying your app to production and staging environments. By default, Arc will deploy to the `us-west-2` region, if you wish to deploy to a different region, you'll need to change your [`app.arc`](https://arc.codes/docs/en/reference/project-manifest/aws)
+This Remix Stack comes with two GitHub Actions that handle automatically deploying your app to production and staging environments. By default, Arc will deploy to the `us-west-2` region, if you wish to deploy to a different region, you'll need to change your [`app.arc`](https://arc.codes/docs/en/reference/project-manifest/aws)
 
 Prior to your first deployment, you'll need to do a few things:
+
+- Globally install Architect and the AWS SDK
+
+  ```sh
+  npm i -g @architect/architect aws-sdk
+  ```
+
+- Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [Sign up](https://portal.aws.amazon.com/billing/signup#/start) and login to your AWS account
+
+  - To login with the CLI, you'll need to generate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, you can do so from your [security credentials](https://console.aws.amazon.com/iam/home?region=us-west-2#/security_credentials) and click on the "Access keys" tab, and then click "Create New Access Key", and then download and open the credentials file.
+  - Next, run `aws configure` and paste in your credentials.
 
 - Create a new [GitHub repo](https://repo.new)
 
@@ -77,7 +76,7 @@ arc env staging SESSION_SECRET $(openssl rand -hex 32)
 arc env production SESSION_SECRET $(openssl rand -hex 32)
 ```
 
-> If you don't have openssl installed, you can also use [1password](https://1password.com/password-generator) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
+If you don't have openssl installed, you can also use [1password](https://1password.com/password-generator) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
 
 ## Where do I find my CloudFormation?
 
@@ -130,4 +129,4 @@ This project uses ESLint for linting. That is configured in `.eslintrc.js`.
 
 ### Formatting
 
-We use [prettier](https://prettier.io/) for auto-formatting in this project. It's recommended to install an editor plugin (like the [VSCode prettier plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)) to get auto-formatting on save. There's also a `npm run format` script you can run to format all files in the project.
+We use [Prettier](https://prettier.io/) for auto-formatting in this project. It's recommended to install an editor plugin (like the [VSCode Prettier plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)) to get auto-formatting on save. There's also a `npm run format` script you can run to format all files in the project.
