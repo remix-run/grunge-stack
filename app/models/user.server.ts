@@ -28,7 +28,10 @@ async function getUserPasswordByEmail(email: string) {
     ExpressionAttributeValues: { ":pk": `email#${email}` },
   });
 
-  return { hash: result.Items[0].password };
+  const [record] = result.Items;
+
+  if (record) return { hash: record.password };
+  return null;
 }
 
 export async function createUser(email: string, password: string) {
