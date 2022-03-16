@@ -4,10 +4,10 @@ import { createUser } from "~/models/user.server";
 import { createUserSession } from "~/session.server";
 
 export const action: ActionFunction = async ({ request }) => {
-  if (
-    process.env.ENABLE_TEST_ROUTES !== "true" ||
-    process.env.NODE_ENV === "production"
-  ) {
+  if (process.env.NODE_ENV === "production") {
+    console.error(
+      "🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 test routes should not be enabled in production 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨"
+    );
     // test routes should not be enabled in production or without
     // enable test routes... Just in case this somehow slips through
     // we'll redirect :)

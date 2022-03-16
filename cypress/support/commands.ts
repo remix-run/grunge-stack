@@ -14,18 +14,6 @@ declare global {
        *    cy.login({ email: 'whatever@example.com' })
        */
       login: typeof login;
-
-      /**
-       * Deletes the current @user
-       *
-       * @returns {typeof cleanupUser}
-       * @memberof Chainable
-       * @example
-       *    cy.cleanupUser()
-       * @example
-       *    cy.cleanupUser({ email: 'whatever@example.com' })
-       */
-      cleanupUser: typeof cleanupUser;
     }
   }
 }
@@ -40,27 +28,4 @@ function login({
   return cy.get("@user");
 }
 
-function cleanupUser({ email }: { email?: string } = {}) {
-  if (email) {
-    deleteUserByEmail(email);
-  } else {
-    cy.get("@user").then((user) => {
-      const email = (user as { email?: string }).email;
-      if (email) {
-        deleteUserByEmail(email);
-      }
-    });
-  }
-}
-
-function deleteUserByEmail(email: string) {
-  cy.request({
-    method: "POST",
-    body: { email },
-    url: "/__tests/delete-user",
-    followRedirect: true,
-  });
-}
-
 Cypress.Commands.add("login", login);
-Cypress.Commands.add("cleanupUser", cleanupUser);

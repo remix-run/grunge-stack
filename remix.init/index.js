@@ -24,7 +24,11 @@ async function main({ rootDirectory }) {
   ]);
 
   const secret = getRandomString(16);
-  const env = `NODE_ENV="development"\nSESSION_SECRET="${secret}"\n`;
+  const env = `NODE_ENV="development"
+SESSION_SECRET="${secret}"
+# make sure this is *not* set in production
+ENABLE_TEST_ROUTES=true
+`.trim();
 
   const newPackageJson =
     JSON.stringify(
