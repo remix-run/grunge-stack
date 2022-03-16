@@ -4,6 +4,10 @@
 
 Learn more about [Remix Stacks](https://remix.run/stacks).
 
+```
+npx create-remix --template remix-run/grunge-stack
+```
+
 ## What's in the stack
 
 - [AWS deployment](https://aws.come) with [Architect](https://arc.codes/docs/en/get-started/quickstart)
