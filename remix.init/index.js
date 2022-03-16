@@ -11,6 +11,7 @@ function getRandomString(length) {
 
 async function main({ rootDirectory }) {
   const APP_ARC_PATH = path.join(rootDirectory, "./app.arc");
+  const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
   const ENV_PATH = path.join(rootDirectory, ".env");
   const PACKAGE_JSON_PATH = path.join(rootDirectory, "package.json");
 
@@ -18,17 +19,16 @@ async function main({ rootDirectory }) {
   const SUFFIX = getRandomString(2);
   const APP_NAME = DIR_NAME + "-" + SUFFIX;
 
-  const [appArc, packageJson] = await Promise.all([
+  const [appArc, env, packageJson] = await Promise.all([
     fs.readFile(APP_ARC_PATH, "utf-8"),
+    fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
     fs.readFile(PACKAGE_JSON_PATH, "utf-8"),
   ]);
 
-  const secret = getRandomString(16);
-  const env = `NODE_ENV="development"
-SESSION_SECRET="${secret}"
-# make sure this is *not* set in production
-ENABLE_TEST_ROUTES=true
-`.trim();
+  const newEnv = env.replace(
+    /^SESSION_SECRET=.*$/m,
+    `SESSION_SECRET="${getRandomString(16)}"`
+  );
 
   const newPackageJson =
     JSON.stringify(
@@ -42,7 +42,7 @@ ENABLE_TEST_ROUTES=true
       APP_ARC_PATH,
       appArc.replace("grunge-stack-template", APP_NAME)
     ),
-    fs.writeFile(ENV_PATH, env),
+    fs.writeFile(ENV_PATH, newEnv),
     fs.writeFile(PACKAGE_JSON_PATH, newPackageJson),
   ]);
 
