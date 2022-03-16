@@ -16,8 +16,10 @@
     "generate:css": "tailwindcss -o ./app/styles/tailwind.css",
     "postinstall": "remix setup node",
     "lint": "eslint --cache-location ./node_modules/.cache/eslint .",
+    "setup": "run-p \"test -- --run\" lint typecheck test:e2e:run",
     "test": "vitest",
     "test:e2e:dev": "cross-env ENABLE_TEST_ROUTES=true start-server-and-test dev http://localhost:3000 'cypress open'",
+    "pretest:e2e:run": "npm run build",
     "test:e2e:run": "cross-env PORT=8811 ENABLE_TEST_ROUTES=true start-server-and-test dev http://localhost:8811 'cypress run'",
     "typecheck": "tsc -b && tsc -b cypress"
   },
