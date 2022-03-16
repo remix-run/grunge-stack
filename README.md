@@ -53,30 +53,20 @@ This Remix Stack comes with two GitHub Actions that handle automatically deployi
 
 Prior to your first deployment, you'll need to do a few things:
 
-- Globally install Architect and the AWS SDK
-
-  ```sh
-  npm i -g @architect/architect aws-sdk
-  ```
-
-- Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-- [Sign up](https://portal.aws.amazon.com/billing/signup#/start) and login to your AWS account
-
-  - To login with the CLI, you'll need to generate `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, you can do so from your [security credentials](https://console.aws.amazon.com/iam/home?region=us-west-2#/security_credentials) and click on the "Access keys" tab, and then click "Create New Access Key", and then download and open the credentials file.
-  - Next, run `aws configure` and paste in your credentials.
-
 - Create a new [GitHub repo](https://repo.new)
 
-- Make sure you have your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` saved to [your GitHub repo's secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets). You can re-use the ones you used for the AWS CLI or you can go to your AWS [security credentials](https://console.aws.amazon.com/iam/home?region=us-west-2#/security_credentials) and click on the "Access keys" tab, and then click "Create New Access Key", then you can copy those and add them to your repo's secrets.
+- [Sign up](https://portal.aws.amazon.com/billing/signup#/start) and login to your AWS account
 
-Along with your AWS credentials, you'll also need to give your CloudFormation a `SESSION_SECRET` variable of its own for both staging and production environments.
+- Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to [your GitHub repo's secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets). Go to your AWS [security credentials](https://console.aws.amazon.com/iam/home?region=us-west-2#/security_credentials) and click on the "Access keys" tab, and then click "Create New Access Key", then you can copy those and add them to your repo's secrets.
 
-```sh
-arc env staging SESSION_SECRET $(openssl rand -hex 32)
-arc env production SESSION_SECRET $(openssl rand -hex 32)
-```
+- Along with your AWS credentials, you'll also need to give your CloudFormation a `SESSION_SECRET` variable of its own for both staging and production environments.
 
-If you don't have openssl installed, you can also use [1password](https://1password.com/password-generator) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
+  ```sh
+  arc env staging SESSION_SECRET $(openssl rand -hex 32)
+  arc env production SESSION_SECRET $(openssl rand -hex 32)
+  ```
+
+  If you don't have openssl installed, you can also use [1password](https://1password.com/password-generator) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
 
 ## Where do I find my CloudFormation?
 
