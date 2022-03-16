@@ -1,7 +1,5 @@
 const path = require("path");
 
-console.log(process.argv);
-
 /**
  * @type {import('@remix-run/dev').AppConfig}
  */
