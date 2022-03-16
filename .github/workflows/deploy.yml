@@ -1,6 +1,10 @@
 name: 🚀 Deploy
-
-on: push
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request: {}
 
 defaults:
   run:
@@ -15,12 +19,12 @@ jobs:
         uses: styfle/cancel-workflow-action@0.9.1
 
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 14
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
@@ -36,12 +40,12 @@ jobs:
         uses: styfle/cancel-workflow-action@0.9.1
 
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 14
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
@@ -57,12 +61,12 @@ jobs:
         uses: styfle/cancel-workflow-action@0.9.1
 
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 14
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
@@ -78,15 +82,15 @@ jobs:
         uses: styfle/cancel-workflow-action@0.9.1
 
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: 🏄 Copy test env vars
         run: cp .env.example .env
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 14
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
@@ -112,12 +116,12 @@ jobs:
         uses: styfle/cancel-workflow-action@0.9.1
 
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 14
 
       - name: 👀 Env
         run: |
