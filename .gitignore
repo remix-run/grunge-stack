@@ -1,11 +1,13 @@
 node_modules
+
 /server/build
 /public/build
 preferences.arc
 sam.json
 sam.yaml
-/cypress/videos
-/cypress/screenshots
 .env
-/app/styles/tailwind.css
 
+/cypress/screenshots
+/cypress/videos
+
+/app/styles/tailwind.css

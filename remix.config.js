@@ -1,7 +1,7 @@
 const path = require("path");
 
 /**
- * @type {import('@remix-run/dev/config').AppConfig}
+ * @type {import('@remix-run/dev').AppConfig}
  */
 module.exports = {
   appDirectory: "app",
