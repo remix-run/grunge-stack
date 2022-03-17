@@ -10,7 +10,7 @@ npx create-remix --template remix-run/grunge-stack
 
 ## What's in the stack
 
-- [AWS deployment](https://aws.come) with [Architect](https://arc.codes/docs/en/get-started/quickstart)
+- [AWS deployment](https://aws.com) with [Architect](https://arc.codes/)
 - Production-ready [DynamoDB Database](https://aws.amazon.com/dynamodb/)
 - [GitHub Actions](https://github.com/features/actions) for deploy on merge to production and staging environments
 - Email/Password Authentication with [cookie-based sessions](https://remix.run/docs/en/v1/api/remix#createcookiesessionstorage)
@@ -49,7 +49,7 @@ This is a pretty simple note-taking app, but it's a good example of how you can 
 - user sessions, and verifying them [./app/session.server.ts](./app/session.server.ts)
 - creating, and deleting notes [./app/models/note.server.ts](./app/models/note.server.ts)
 
-The database that comes with `arc sandbox` is an in memory database, so if you restart the server, you'll lose your data. The Staging and Production environments won't behave this way, instead they'll persist the data in dynamoDB between deployments and Lambda executions.
+The database that comes with `arc sandbox` is an in memory database, so if you restart the server, you'll lose your data. The Staging and Production environments won't behave this way, instead they'll persist the data in DynamoDB between deployments and Lambda executions.
 
 ## Deployment
 
@@ -66,8 +66,8 @@ Prior to your first deployment, you'll need to do a few things:
 - Along with your AWS credentials, you'll also need to give your CloudFormation a `SESSION_SECRET` variable of its own for both staging and production environments.
 
   ```sh
-  arc env staging SESSION_SECRET $(openssl rand -hex 32)
-  arc env production SESSION_SECRET $(openssl rand -hex 32)
+  npx arc env --add --env staging SESSION_SECRET $(openssl rand -hex 32)
+  npx arc env --add --env production SESSION_SECRET $(openssl rand -hex 32)
   ```
 
   If you don't have openssl installed, you can also use [1password](https://1password.com/password-generator) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
