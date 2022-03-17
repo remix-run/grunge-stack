@@ -20,6 +20,7 @@ async function main({ rootDirectory }) {
   const DIR_NAME = path.basename(rootDirectory);
   const SUFFIX = getRandomString(2);
   const APP_NAME = DIR_NAME + "-" + SUFFIX;
+  const CLOUDFORMATION_NAME = toLogicalID(APP_NAME)
 
   const [appArc, env, packageJson, readme] = await Promise.all([
     fs.readFile(APP_ARC_PATH, "utf-8"),
@@ -49,7 +50,7 @@ async function main({ rootDirectory }) {
     fs.writeFile(PACKAGE_JSON_PATH, newPackageJson),
     fs.writeFile(
       README_PATH,
-      readme.replace("RemixGrungeStack", toLogicalID(APP_NAME))
+      readme.replace(new RegExp("RemixGrungeStack", "g"), toLogicalID(APP_NAME))
     ),
   ]);
 
