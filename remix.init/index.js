@@ -4,6 +4,7 @@ const fs = require("fs/promises");
 const path = require("path");
 
 const sort = require("sort-package-json");
+const { toLogicalID } = require("@architect/utils");
 
 function getRandomString(length) {
   return crypto.randomBytes(length).toString("hex");
@@ -14,15 +15,17 @@ async function main({ rootDirectory }) {
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
   const ENV_PATH = path.join(rootDirectory, ".env");
   const PACKAGE_JSON_PATH = path.join(rootDirectory, "package.json");
+  const README_PATH = path.join(rootDirectory, "README.md");
 
   const DIR_NAME = path.basename(rootDirectory);
   const SUFFIX = getRandomString(2);
   const APP_NAME = DIR_NAME + "-" + SUFFIX;
 
-  const [appArc, env, packageJson] = await Promise.all([
+  const [appArc, env, packageJson, readme] = await Promise.all([
     fs.readFile(APP_ARC_PATH, "utf-8"),
     fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
     fs.readFile(PACKAGE_JSON_PATH, "utf-8"),
+    fs.readFile(README_PATH, "utf-8"),
   ]);
 
   const newEnv = env.replace(
@@ -44,6 +47,10 @@ async function main({ rootDirectory }) {
     ),
     fs.writeFile(ENV_PATH, newEnv),
     fs.writeFile(PACKAGE_JSON_PATH, newPackageJson),
+    fs.writeFile(
+      README_PATH,
+      readme.replace(new RegExp("RemixGrungeStack", "g"), toLogicalID(APP_NAME))
+    ),
   ]);
 
   console.log(
