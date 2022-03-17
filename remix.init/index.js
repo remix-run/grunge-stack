@@ -20,7 +20,6 @@ async function main({ rootDirectory }) {
   const DIR_NAME = path.basename(rootDirectory);
   const SUFFIX = getRandomString(2);
   const APP_NAME = DIR_NAME + "-" + SUFFIX;
-  const CLOUDFORMATION_NAME = toLogicalID(APP_NAME)
 
   const [appArc, env, packageJson, readme] = await Promise.all([
     fs.readFile(APP_ARC_PATH, "utf-8"),
