@@ -1,22 +1,28 @@
-import cuid from "cuid";
 import arc from "@architect/functions";
+import cuid from "cuid";
+import { User } from "./user.server";
 
 export type Note = {
-  id: string;
-  userId: string;
+  id: ReturnType<typeof cuid>;
+  userId: User["id"];
   title: string;
   body: string;
 };
 
-const skToId = (sk: string) => sk.replace(/^note#/, "");
-const idToSk = (id: string) => `note#${id}`;
+type NoteItem = {
+  pk: User["id"];
+  sk: `note#${Note["id"]}`;
+};
+
+const skToId = (sk: NoteItem["sk"]): Note["id"] => sk.replace(/^note#/, "");
+const idToSk = (id: Note["id"]): NoteItem["sk"] => `note#${id}`;
 
 export async function getNote({
   userId,
   id,
 }: {
-  userId: string;
-  id: string;
+  userId: Note["userId"];
+  id: Note["id"];
 }): Promise<Note | null> {
   const db = await arc.tables();
 
@@ -36,7 +42,7 @@ export async function getNote({
 export async function getNoteListItems({
   userId,
 }: {
-  userId: string;
+  userId: Note["userId"];
 }): Promise<Array<Pick<Note, "id" | "title">>> {
   const db = await arc.tables();
 
@@ -56,9 +62,9 @@ export async function createNote({
   body,
   userId,
 }: {
-  title: string;
-  body: string;
-  userId: string;
+  title: Note["title"];
+  body: Note["body"];
+  userId: Note["userId"];
 }): Promise<Note> {
   const db = await arc.tables();
 
@@ -80,8 +86,8 @@ export async function deleteNote({
   id,
   userId,
 }: {
-  id: string;
-  userId: string;
+  id: Note["id"];
+  userId: Note["userId"];
 }) {
   const db = await arc.tables();
   return db.note.delete({ pk: userId, sk: idToSk(id) });

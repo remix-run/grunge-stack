@@ -2,10 +2,10 @@ import arc from "@architect/functions";
 import bcrypt from "bcryptjs";
 import invariant from "tiny-invariant";
 
-export type User = { id: string; email: string };
+export type User = { id: `email#${string}`; email: string };
 export type Password = { password: string };
 
-export async function getUserById(id: string): Promise<User | null> {
+export async function getUserById(id: User["id"]): Promise<User | null> {
   const db = await arc.tables();
   const result = await db.user.query({
     KeyConditionExpression: "pk = :pk",
@@ -17,11 +17,11 @@ export async function getUserById(id: string): Promise<User | null> {
   return null;
 }
 
-export async function getUserByEmail(email: string) {
+export async function getUserByEmail(email: User["email"]) {
   return getUserById(`email#${email}`);
 }
 
-async function getUserPasswordByEmail(email: string) {
+async function getUserPasswordByEmail(email: User["email"]) {
   const db = await arc.tables();
   const result = await db.password.query({
     KeyConditionExpression: "pk = :pk",
@@ -34,7 +34,7 @@ async function getUserPasswordByEmail(email: string) {
   return null;
 }
 
-export async function createUser(email: string, password: string) {
+export async function createUser(email: User["email"], password: string) {
   const hashedPassword = await bcrypt.hash(password, 10);
   const db = await arc.tables();
   await db.password.put({
@@ -53,13 +53,13 @@ export async function createUser(email: string, password: string) {
   return user;
 }
 
-export async function deleteUser(email: string) {
+export async function deleteUser(email: User["email"]) {
   const db = await arc.tables();
   await db.password.delete({ pk: `email#${email}` });
   await db.user.delete({ pk: `email#${email}` });
 }
 
-export async function verifyLogin(email: string, password: string) {
+export async function verifyLogin(email: User["email"], password: string) {
   const userPassword = await getUserPasswordByEmail(email);
 
   if (!userPassword) {
