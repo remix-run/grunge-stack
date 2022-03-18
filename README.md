@@ -27,10 +27,10 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
 
 ## Development
 
-- Initial setup: _If you just generated this project, this step has been done for you._
+- Validate the app has been set up properly (optional):
 
   ```sh
-  npm run setup
+  npm run validate
   ```
 
 - Start dev server:

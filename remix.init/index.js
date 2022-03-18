@@ -2,6 +2,7 @@ const { execSync } = require("child_process");
 const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
+const inquirer = require("inquirer");
 
 const sort = require("sort-package-json");
 const { toLogicalID } = require("@architect/utils");
@@ -53,11 +54,32 @@ async function main({ rootDirectory }) {
     ),
   ]);
 
-  console.log(
-    `Running the setup script to make sure everything was set up properly`
-  );
-  execSync(`npm run setup`, { stdio: "inherit", cwd: rootDirectory });
+  await askSetupQuestions({ rootDirectory }).catch((error) => {
+    if (error.isTtyError) {
+      // Prompt couldn't be rendered in the current environment
+    } else {
+      throw error;
+    }
+  });
+}
 
+async function askSetupQuestions({ rootDirectory }) {
+  const answers = await inquirer.prompt([
+    {
+      name: "validate",
+      type: "confirm",
+      default: false,
+      message:
+        "Do you want to run the build/tests/etc to verify things are setup properly?",
+    },
+  ]);
+
+  if (answers.validate) {
+    console.log(
+      `Running the validate script to make sure everything was set up properly`
+    );
+    execSync(`npm run validate`, { stdio: "inherit", cwd: rootDirectory });
+  }
   console.log(`✅  Project is ready! Start development with "npm run dev"`);
 }
 
