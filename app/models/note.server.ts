@@ -1,6 +1,7 @@
 import arc from "@architect/functions";
 import cuid from "cuid";
-import { User } from "./user.server";
+
+import type { User } from "./user.server";
 
 export type Note = {
   id: ReturnType<typeof cuid>;
