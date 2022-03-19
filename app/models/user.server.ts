@@ -34,7 +34,10 @@ async function getUserPasswordByEmail(email: User["email"]) {
   return null;
 }
 
-export async function createUser(email: User["email"], password: string) {
+export async function createUser(
+  email: User["email"],
+  password: Password["password"]
+) {
   const hashedPassword = await bcrypt.hash(password, 10);
   const db = await arc.tables();
   await db.password.put({
@@ -59,7 +62,10 @@ export async function deleteUser(email: User["email"]) {
   await db.user.delete({ pk: `email#${email}` });
 }
 
-export async function verifyLogin(email: User["email"], password: string) {
+export async function verifyLogin(
+  email: User["email"],
+  password: Password["password"]
+) {
   const userPassword = await getUserPasswordByEmail(email);
 
   if (!userPassword) {

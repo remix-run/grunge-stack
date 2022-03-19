@@ -19,12 +19,9 @@ const skToId = (sk: NoteItem["sk"]): Note["id"] => sk.replace(/^note#/, "");
 const idToSk = (id: Note["id"]): NoteItem["sk"] => `note#${id}`;
 
 export async function getNote({
-  userId,
   id,
-}: {
-  userId: Note["userId"];
-  id: Note["id"];
-}): Promise<Note | null> {
+  userId,
+}: Pick<Note, "id" | "userId">): Promise<Note | null> {
   const db = await arc.tables();
 
   const result = await await db.note.get({ pk: userId, sk: idToSk(id) });
@@ -42,9 +39,7 @@ export async function getNote({
 
 export async function getNoteListItems({
   userId,
-}: {
-  userId: Note["userId"];
-}): Promise<Array<Pick<Note, "id" | "title">>> {
+}: Pick<Note, "userId">): Promise<Array<Pick<Note, "id" | "title">>> {
   const db = await arc.tables();
 
   const result = await db.note.query({
@@ -59,14 +54,10 @@ export async function getNoteListItems({
 }
 
 export async function createNote({
-  title,
   body,
+  title,
   userId,
-}: {
-  title: Note["title"];
-  body: Note["body"];
-  userId: Note["userId"];
-}): Promise<Note> {
+}: Pick<Note, "body" | "title" | "userId">): Promise<Note> {
   const db = await arc.tables();
 
   const result = await db.note.put({
@@ -83,13 +74,7 @@ export async function createNote({
   };
 }
 
-export async function deleteNote({
-  id,
-  userId,
-}: {
-  id: Note["id"];
-  userId: Note["userId"];
-}) {
+export async function deleteNote({ id, userId }: Pick<Note, "id" | "userId">) {
   const db = await arc.tables();
   return db.note.delete({ pk: userId, sk: idToSk(id) });
 }
