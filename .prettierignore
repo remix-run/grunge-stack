@@ -1,6 +1,6 @@
 node_modules
 
-/server/build
+/server/index.js
 /public/build
 preferences.arc
 sam.json
