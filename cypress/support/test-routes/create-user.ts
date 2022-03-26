@@ -31,3 +31,5 @@ export const action: ActionFunction = async ({ request }) => {
     redirectTo: "/",
   });
 };
+
+export default null;
