@@ -33,6 +33,7 @@
     "@architect/functions": "^5.0.4",
     "@remix-run/architect": "*",
     "@remix-run/react": "*",
+    "@remix-run/server-runtime": "*",
     "bcryptjs": "2.4.3",
     "cuid": "^2.1.8",
     "react": "^17.0.2",
