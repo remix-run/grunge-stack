@@ -14,7 +14,6 @@
     "dev:remix": "remix watch",
     "format": "prettier --write .",
     "generate:css": "tailwindcss -o ./app/styles/tailwind.css",
-    "postinstall": "remix setup node",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "test": "vitest",
     "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"cypress open\"",
@@ -32,13 +31,13 @@
     "@architect/architect": "^10.2.0",
     "@architect/functions": "^5.0.4",
     "@remix-run/architect": "*",
+    "@remix-run/node": "*",
     "@remix-run/react": "*",
     "@remix-run/server-runtime": "*",
     "bcryptjs": "2.4.3",
     "cuid": "^2.1.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "remix": "*",
     "tiny-invariant": "^1.2.0"
   },
   "devDependencies": {
