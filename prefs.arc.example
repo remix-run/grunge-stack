@@ -1,0 +1,4 @@
+# Copy this file and rename to `prefs.arc` to set your local preferences.
+
+@sandbox-startup
+ts-node ./seedDatabase.ts
