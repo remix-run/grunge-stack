@@ -11,6 +11,7 @@ module.exports = {
   serverBuildTarget: "arc",
   server: "./server.ts",
   ignoredRouteFiles: [".*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
+  devServerPort: 8002,
   routes(defineRoutes) {
     return defineRoutes((route) => {
       if (process.env.NODE_ENV === "production") return;
