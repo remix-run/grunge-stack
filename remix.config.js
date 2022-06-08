@@ -9,7 +9,7 @@ module.exports = {
   assetsBuildDirectory: "public/build",
   publicPath: "/_static/build/",
   serverBuildTarget: "arc",
-  server: "./server.js",
+  server: "./server.ts",
   ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
   routes(defineRoutes) {
     return defineRoutes((route) => {

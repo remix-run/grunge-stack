@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@architect/utils": "^3.1.0",
-    "inquirer": "^8.2.2",
-    "sort-package-json": "^1.55.0"
+    "@architect/utils": "^3.1.2",
+    "inquirer": "^8.2.4",
+    "sort-package-json": "^1.57.0"
   }
 }

@@ -30,10 +30,6 @@ async function main({ rootDirectory }) {
     fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
     fs.readFile(PACKAGE_JSON_PATH, "utf-8"),
     fs.readFile(README_PATH, "utf-8"),
-    fs.rm(path.join(rootDirectory, ".github/ISSUE_TEMPLATE"), {
-      recursive: true,
-    }),
-    fs.rm(path.join(rootDirectory, ".github/PULL_REQUEST_TEMPLATE.md")),
   ]);
 
   const newEnv = env.replace(
@@ -59,6 +55,14 @@ async function main({ rootDirectory }) {
       README_PATH,
       readme.replace(new RegExp("RemixGrungeStack", "g"), toLogicalID(APP_NAME))
     ),
+    fs.copyFile(
+      path.join(rootDirectory, "remix.init", "gitignore"),
+      path.join(rootDirectory, ".gitignore")
+    ),
+    fs.rm(path.join(rootDirectory, ".github/ISSUE_TEMPLATE"), {
+      recursive: true,
+    }),
+    fs.rm(path.join(rootDirectory, ".github/PULL_REQUEST_TEMPLATE.md")),
   ]);
 
   await askSetupQuestions({ rootDirectory }).catch((error) => {
