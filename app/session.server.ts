@@ -33,7 +33,7 @@ export async function getUserId(
   return userId;
 }
 
-export async function getUser(request: Request): Promise<null | User> {
+export async function getUser(request: Request) {
   const userId = await getUserId(request);
   if (userId === undefined) return null;
 
@@ -46,7 +46,7 @@ export async function getUser(request: Request): Promise<null | User> {
 export async function requireUserId(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
-): Promise<User["id"]> {
+) {
   const userId = await getUserId(request);
   if (!userId) {
     const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
