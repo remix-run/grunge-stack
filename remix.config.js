@@ -10,7 +10,7 @@ module.exports = {
   publicPath: "/_static/build/",
   serverBuildTarget: "arc",
   server: "./server.ts",
-  ignoredRouteFiles: [".*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
+  ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
   routes(defineRoutes) {
     return defineRoutes((route) => {
       if (process.env.NODE_ENV === "production") return;
