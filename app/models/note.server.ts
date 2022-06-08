@@ -62,7 +62,7 @@ export async function createNote({
 
   const result = await db.note.put({
     pk: userId,
-    sk: `note#${cuid()}`,
+    sk: idToSk(cuid()),
     title: title,
     body: body,
   });
