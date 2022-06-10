@@ -15,7 +15,7 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "test": "vitest",
     "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"npx cypress open\"",
-    "test:e2e:run": "cross-env PORT=8811 start-server-and-test dev http://localhost:8811 \"npx cypress run\"",
+    "test:e2e:run": "cross-env PORT=3000 start-server-and-test dev http://localhost:3000 \"npx cypress run\"",
     "typecheck": "tsc -b && tsc -b cypress",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
   },
