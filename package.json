@@ -7,7 +7,7 @@
     "build:css": "npm run generate:css -- --minify",
     "build:remix": "remix build",
     "dev": "run-p dev:*",
-    "dev:arc": "cross-env PORT=3000 ARC_LOCAL=1 ARC_TABLES_PORT=5555 arc sandbox",
+    "dev:arc": "node ./dev sandbox",
     "dev:css": "npm run generate:css -- --watch",
     "dev:remix": "remix watch",
     "format": "prettier --write .",
@@ -15,12 +15,16 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "test": "vitest",
     "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"npx cypress open\"",
-    "test:e2e:run": "cross-env PORT=3000 start-server-and-test dev http://localhost:3000 \"npx cypress run\"",
+    "test:e2e:run": "cross-env PORT=8811 start-server-and-test dev http://localhost:8811 \"npx cypress run\"",
     "typecheck": "tsc -b && tsc -b cypress",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
   },
   "prettier": {},
-  "eslintIgnore": ["/node_modules", "/server/index.js", "/public/build"],
+  "eslintIgnore": [
+    "/node_modules",
+    "/server/index.js",
+    "/public/build"
+  ],
   "dependencies": {
     "@architect/architect": "^10.3.3",
     "@architect/functions": "^5.1.0",
