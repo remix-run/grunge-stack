@@ -24,7 +24,7 @@ export async function getNote({
 }: Pick<Note, "id" | "userId">): Promise<Note | null> {
   const db = await arc.tables();
 
-  const result = await await db.note.get({ pk: userId, sk: idToSk(id) });
+  const result = await db.note.get({ pk: userId, sk: idToSk(id) });
 
   if (result) {
     return {
