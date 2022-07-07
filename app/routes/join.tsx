@@ -18,12 +18,12 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json({});
 };
 
-interface ActionData {
+type ActionData = {
   errors: {
     email?: string;
     password?: string;
   };
-}
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -79,7 +79,7 @@ export const meta: MetaFunction = () => {
 export default function Join() {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? undefined;
-  const actionData = useActionData() as ActionData;
+  const actionData = useActionData<ActionData>();
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
 
