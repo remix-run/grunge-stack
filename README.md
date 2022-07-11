@@ -27,6 +27,12 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
 
 ## Development
 
+- This step only applies if you've opted out of having the CLI install dependencies for you:
+
+   ```sh
+   npx remix init
+   ```
+
 - Validate the app has been set up properly (optional):
 
   ```sh
@@ -100,16 +106,6 @@ We have a utility for testing authenticated features without having to go throug
 cy.login();
 // you are now logged in as a new user
 ```
-
-We also have a utility to auto-delete the user at the end of your test. Just make sure to add this in each test file:
-
-```ts
-afterEach(() => {
-  cy.cleanupUser();
-});
-```
-
-That way, we can keep your local db clean and keep your tests isolated from one another.
 
 ### Vitest
 
