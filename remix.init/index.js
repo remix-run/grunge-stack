@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
 const inquirer = require("inquirer");
+const YAML = require("yaml");
 
 const sort = require("sort-package-json");
 const { toLogicalID } = require("@architect/utils");
@@ -11,12 +12,16 @@ function getRandomString(length) {
   return crypto.randomBytes(length).toString("hex");
 }
 
-async function main({ rootDirectory }) {
+async function main({ rootDirectory, isTypeScript }) {
   const APP_ARC_PATH = path.join(rootDirectory, "./app.arc");
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
   const ENV_PATH = path.join(rootDirectory, ".env");
   const PACKAGE_JSON_PATH = path.join(rootDirectory, "package.json");
   const README_PATH = path.join(rootDirectory, "README.md");
+  const DEPLOY_YAML_PATH = path.join(
+    rootDirectory,
+    ".github/workflows/deploy.yml"
+  );
 
   const DIR_NAME = path.basename(rootDirectory);
   const SUFFIX = getRandomString(2);
@@ -25,10 +30,11 @@ async function main({ rootDirectory }) {
     // get rid of anything that's not allowed in an app name
     .replace(/[^a-zA-Z0-9-_]/g, "-");
 
-  const [appArc, env, packageJson, readme] = await Promise.all([
+  const [appArc, env, packageJson, deployConfig, readme] = await Promise.all([
     fs.readFile(APP_ARC_PATH, "utf-8"),
     fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
-    fs.readFile(PACKAGE_JSON_PATH, "utf-8"),
+    fs.readFile(PACKAGE_JSON_PATH, "utf-8").then((s) => JSON.parse(s)),
+    fs.readFile(DEPLOY_YAML_PATH, "utf-8").then((s) => YAML.parse(s)),
     fs.readFile(README_PATH, "utf-8"),
   ]);
 
@@ -37,12 +43,24 @@ async function main({ rootDirectory }) {
     `SESSION_SECRET="${getRandomString(16)}"`
   );
 
+  let saveDeploy = null;
+  if (!isTypeScript) {
+    delete packageJson.scripts.typecheck;
+    packageJson.scripts.validate = packageJson.scripts.validate.replace(
+      " typecheck",
+      ""
+    );
+
+    delete deployConfig.jobs.typecheck;
+    deployConfig.jobs.deploy.needs = deployConfig.jobs.deploy.needs.filter(
+      (n) => n !== "typecheck"
+    );
+    // only write the deploy config if it's changed
+    saveDeploy = fs.writeFile(DEPLOY_YAML_PATH, YAML.stringify(deployConfig));
+  }
+
   const newPackageJson =
-    JSON.stringify(
-      sort({ ...JSON.parse(packageJson), name: APP_NAME }),
-      null,
-      2
-    ) + "\n";
+    JSON.stringify(sort({ ...packageJson, name: APP_NAME }), null, 2) + "\n";
 
   await Promise.all([
     fs.writeFile(
@@ -51,6 +69,7 @@ async function main({ rootDirectory }) {
     ),
     fs.writeFile(ENV_PATH, newEnv),
     fs.writeFile(PACKAGE_JSON_PATH, newPackageJson),
+    saveDeploy,
     fs.writeFile(
       README_PATH,
       readme.replace(new RegExp("RemixGrungeStack", "g"), toLogicalID(APP_NAME))
