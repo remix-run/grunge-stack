@@ -6,6 +6,7 @@ const path = require("path");
 const { toLogicalID } = require("@architect/utils");
 const PackageJson = require("@npmcli/package-json");
 const inquirer = require("inquirer");
+const semver = require("semver");
 const YAML = require("yaml");
 
 const cleanupDeployWorkflow = (deployWorkflow, deployWorkflowPath) => {
@@ -33,6 +34,39 @@ const cleanupVitestConfig = (vitestConfig, vitestConfigPath) => {
 
   return [fs.writeFile(vitestConfigPath, newVitestConfig)];
 };
+
+const getPackageManagerCommand = (packageManager) =>
+  // Inspired by https://github.com/nrwl/nx/blob/bd9b33eaef0393d01f747ea9a2ac5d2ca1fb87c6/packages/nx/src/utils/package-manager.ts#L38-L103
+  ({
+    npm: () => ({
+      exec: "npx",
+      lockfile: "package-lock.json",
+      run: (script, args) => `npm run ${script} ${args ? `-- ${args}` : ""}`,
+    }),
+    pnpm: () => {
+      const pnpmVersion = getPackageManagerVersion("pnpm");
+      const includeDoubleDashBeforeArgs = semver.lt(pnpmVersion, "7.0.0");
+      const useExec = semver.gte(pnpmVersion, "6.13.0");
+
+      return {
+        exec: useExec ? "pnpm exec" : "pnpx",
+        lockfile: "pnpm-lock.yaml",
+        run: (script, args) =>
+          includeDoubleDashBeforeArgs
+            ? `pnpm run ${script} ${args ? `-- ${args}` : ""}`
+            : `pnpm run ${script} ${args || ""}`,
+      };
+    },
+    yarn: () => ({
+      exec: "yarn",
+      lockfile: "yarn.lock",
+      run: (script, args) => `yarn ${script} ${args || ""}`,
+    }),
+  }[packageManager]());
+
+const getPackageManagerVersion = (packageManager) =>
+  // Copied over from https://github.com/nrwl/nx/blob/bd9b33eaef0393d01f747ea9a2ac5d2ca1fb87c6/packages/nx/src/utils/package-manager.ts#L105-L114
+  execSync(`${packageManager} --version`).toString("utf-8").trim();
 
 const getRandomString = (length) => crypto.randomBytes(length).toString("hex");
 
@@ -69,7 +103,9 @@ const updatePackageJson = ({ APP_NAME, isTypeScript, packageJson }) => {
   });
 };
 
-const main = async ({ isTypeScript, rootDirectory }) => {
+const main = async ({ isTypeScript, packageManager, rootDirectory }) => {
+  const FILE_EXTENSION = isTypeScript ? "ts" : "js";
+
   const APP_ARC_PATH = path.join(rootDirectory, "./app.arc");
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
   const ENV_PATH = path.join(rootDirectory, ".env");
@@ -81,7 +117,10 @@ const main = async ({ isTypeScript, rootDirectory }) => {
     "deploy.yml"
   );
   const REMIX_CONFIG_PATH = path.join(rootDirectory, "remix.config.js");
-  const VITEST_CONFIG_PATH = path.join(rootDirectory, "vitest.config.js"); // We renamed this during `create-remix`
+  const VITEST_CONFIG_PATH = path.join(
+    rootDirectory,
+    `vitest.config.${FILE_EXTENSION}`
+  );
 
   const DIR_NAME = path.basename(rootDirectory);
   const SUFFIX = getRandomString(2);
@@ -155,7 +194,7 @@ const main = async ({ isTypeScript, rootDirectory }) => {
 
   await Promise.all(fileOperationPromises);
 
-  await askSetupQuestions({ rootDirectory }).catch((error) => {
+  await askSetupQuestions({ packageManager, rootDirectory }).catch((error) => {
     if (error.isTtyError) {
       // Prompt couldn't be rendered in the current environment
     } else {
@@ -164,7 +203,7 @@ const main = async ({ isTypeScript, rootDirectory }) => {
   });
 };
 
-async function askSetupQuestions({ rootDirectory }) {
+async function askSetupQuestions({ packageManager, rootDirectory }) {
   const answers = await inquirer.prompt([
     {
       name: "validate",
@@ -174,14 +213,18 @@ async function askSetupQuestions({ rootDirectory }) {
         "Do you want to run the build/tests/etc to verify things are setup properly?",
     },
   ]);
+  const pm = getPackageManagerCommand(packageManager);
 
   if (answers.validate) {
     console.log(
       `Running the validate script to make sure everything was set up properly`
     );
-    execSync(`npm run validate`, { stdio: "inherit", cwd: rootDirectory });
+    execSync(pm.run("validate"), { cwd: rootDirectory, stdio: "inherit" });
   }
-  console.log(`✅  Project is ready! Start development with "npm run dev"`);
+
+  console.log(
+    `✅  Project is ready! Start development with "${pm.run("dev")}"`
+  );
 }
 
 module.exports = main;
