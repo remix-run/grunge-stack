@@ -16,9 +16,12 @@ module.exports = {
       if (process.env.NODE_ENV === "production") return;
 
       console.log("⚠️  Test routes enabled.");
+
+      let appDir = path.join(__dirname, "app");
+
       route(
         "__tests/create-user",
-        path.join(__dirname, "cypress/support/test-routes/create-user.ts")
+        path.relative(appDir, "cypress/support/test-routes/create-user.ts")
       );
     });
   },
