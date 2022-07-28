@@ -2,26 +2,80 @@ const { execSync } = require("child_process");
 const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
+
+const { toLogicalID } = require("@architect/utils");
 const inquirer = require("inquirer");
+const PackageJson = require("@npmcli/package-json");
 const YAML = require("yaml");
 
-const sort = require("sort-package-json");
-const { toLogicalID } = require("@architect/utils");
+const cleanupDeployWorkflow = (deployWorkflow, deployWorkflowPath) => {
+  delete deployWorkflow.jobs.typecheck;
+  deployWorkflow.jobs.deploy.needs = deployWorkflow.jobs.deploy.needs.filter(
+    (need) => need !== "typecheck"
+  );
 
-function getRandomString(length) {
-  return crypto.randomBytes(length).toString("hex");
-}
+  return [fs.writeFile(deployWorkflowPath, YAML.stringify(deployWorkflow))];
+};
 
-async function main({ rootDirectory, isTypeScript }) {
+const cleanupVitestConfig = (vitestConfig, vitestConfigPath) => {
+  const newVitestConfig = vitestConfig.replace(
+    "setup-test-env.ts",
+    "setup-test-env.js"
+  );
+
+  return [fs.writeFile(vitestConfigPath, newVitestConfig)];
+};
+
+const getRandomString = (length) => crypto.randomBytes(length).toString("hex");
+
+const readFileIfNotTypeScript = (
+  isTypeScript,
+  filePath,
+  parseFunction = (result) => result
+) =>
+  (isTypeScript ? Promise.resolve() : fs.readFile(filePath, "utf-8")).then(
+    parseFunction
+  );
+
+const removeUnusedDependencies = (dependencies, unusedDependencies) =>
+  Object.fromEntries(
+    Object.entries(dependencies).filter(
+      ([key]) => !unusedDependencies.includes(key)
+    )
+  );
+
+const updatePackageJson = ({ APP_NAME, isTypeScript, packageJson }) => {
+  const {
+    devDependencies,
+    scripts: { typecheck, validate, ...scripts },
+  } = packageJson.content;
+
+  packageJson.update({
+    name: APP_NAME,
+    devDependencies: isTypeScript
+      ? devDependencies
+      : removeUnusedDependencies(devDependencies, [
+          "ts-node",
+          "vite-tsconfig-paths",
+        ]),
+    scripts: isTypeScript
+      ? { ...scripts, typecheck, validate }
+      : { ...scripts, validate: validate.replace(" typecheck", "") },
+  });
+};
+
+const main = async ({ isTypeScript, rootDirectory }) => {
   const APP_ARC_PATH = path.join(rootDirectory, "./app.arc");
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
   const ENV_PATH = path.join(rootDirectory, ".env");
-  const PACKAGE_JSON_PATH = path.join(rootDirectory, "package.json");
   const README_PATH = path.join(rootDirectory, "README.md");
-  const DEPLOY_YAML_PATH = path.join(
+  const DEPLOY_WORKFLOW_PATH = path.join(
     rootDirectory,
-    ".github/workflows/deploy.yml"
+    ".github",
+    "workflows",
+    "deploy.yml"
   );
+  const VITEST_CONFIG_PATH = path.join(rootDirectory, "vitest.config.js"); // We renamed this during `create-remix`
 
   const DIR_NAME = path.basename(rootDirectory);
   const SUFFIX = getRandomString(2);
@@ -30,59 +84,57 @@ async function main({ rootDirectory, isTypeScript }) {
     // get rid of anything that's not allowed in an app name
     .replace(/[^a-zA-Z0-9-_]/g, "-");
 
-  const [appArc, env, packageJson, deployConfig, readme] = await Promise.all([
-    fs.readFile(APP_ARC_PATH, "utf-8"),
-    fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
-    fs.readFile(PACKAGE_JSON_PATH, "utf-8").then((s) => JSON.parse(s)),
-    fs.readFile(DEPLOY_YAML_PATH, "utf-8").then((s) => YAML.parse(s)),
-    fs.readFile(README_PATH, "utf-8"),
-  ]);
+  const [appArc, env, readme, deployWorkflow, vitestConfig, packageJson] =
+    await Promise.all([
+      fs.readFile(APP_ARC_PATH, "utf-8"),
+      fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
+      fs.readFile(README_PATH, "utf-8"),
+      readFileIfNotTypeScript(isTypeScript, DEPLOY_WORKFLOW_PATH, (s) =>
+        YAML.parse(s)
+      ),
+      readFileIfNotTypeScript(isTypeScript, VITEST_CONFIG_PATH),
+      PackageJson.load(rootDirectory),
+    ]);
 
   const newEnv = env.replace(
     /^SESSION_SECRET=.*$/m,
     `SESSION_SECRET="${getRandomString(16)}"`
   );
 
-  let saveDeploy = null;
-  if (!isTypeScript) {
-    delete packageJson.scripts.typecheck;
-    packageJson.scripts.validate = packageJson.scripts.validate.replace(
-      " typecheck",
-      ""
-    );
+  updatePackageJson({ APP_NAME, isTypeScript, packageJson });
 
-    delete deployConfig.jobs.typecheck;
-    deployConfig.jobs.deploy.needs = deployConfig.jobs.deploy.needs.filter(
-      (n) => n !== "typecheck"
-    );
-    // only write the deploy config if it's changed
-    saveDeploy = fs.writeFile(DEPLOY_YAML_PATH, YAML.stringify(deployConfig));
-  }
-
-  const newPackageJson =
-    JSON.stringify(sort({ ...packageJson, name: APP_NAME }), null, 2) + "\n";
-
-  await Promise.all([
+  const fileOperationPromises = [
     fs.writeFile(
       APP_ARC_PATH,
       appArc.replace("grunge-stack-template", APP_NAME)
     ),
     fs.writeFile(ENV_PATH, newEnv),
-    fs.writeFile(PACKAGE_JSON_PATH, newPackageJson),
-    saveDeploy,
     fs.writeFile(
       README_PATH,
       readme.replace(new RegExp("RemixGrungeStack", "g"), toLogicalID(APP_NAME))
     ),
+    packageJson.save(),
     fs.copyFile(
       path.join(rootDirectory, "remix.init", "gitignore"),
       path.join(rootDirectory, ".gitignore")
     ),
-    fs.rm(path.join(rootDirectory, ".github/ISSUE_TEMPLATE"), {
+    fs.rm(path.join(rootDirectory, ".github", "ISSUE_TEMPLATE"), {
       recursive: true,
     }),
-    fs.rm(path.join(rootDirectory, ".github/PULL_REQUEST_TEMPLATE.md")),
-  ]);
+    fs.rm(path.join(rootDirectory, ".github", "PULL_REQUEST_TEMPLATE.md")),
+  ];
+
+  if (!isTypeScript) {
+    fileOperationPromises.push(
+      ...cleanupDeployWorkflow(deployWorkflow, DEPLOY_WORKFLOW_PATH)
+    );
+
+    fileOperationPromises.push(
+      ...cleanupVitestConfig(vitestConfig, VITEST_CONFIG_PATH)
+    );
+  }
+
+  await Promise.all(fileOperationPromises);
 
   await askSetupQuestions({ rootDirectory }).catch((error) => {
     if (error.isTtyError) {
@@ -91,7 +143,7 @@ async function main({ rootDirectory, isTypeScript }) {
       throw error;
     }
   });
-}
+};
 
 async function askSetupQuestions({ rootDirectory }) {
   const answers = await inquirer.prompt([
