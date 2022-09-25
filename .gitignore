@@ -7,8 +7,7 @@ pnpm-lock.yml
 
 node_modules
 
-/server/index.js
-/server/index.js.map
+/server
 /public/build
 preferences.arc
 sam.json

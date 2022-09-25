@@ -22,7 +22,7 @@
   "prettier": {},
   "eslintIgnore": [
     "/node_modules",
-    "/server/index.js",
+    "/server",
     "/public/build"
   ],
   "dependencies": {
