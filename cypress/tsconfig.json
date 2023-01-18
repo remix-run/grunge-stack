@@ -12,7 +12,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "noEmit": true,
-    "types": ["node", "cypress", "@testing-library/cypress"],
+    "types": ["cypress", "@testing-library/cypress"],
     "esModuleInterop": true,
     "jsx": "react-jsx",
     "moduleResolution": "node",
