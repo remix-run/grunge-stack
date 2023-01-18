@@ -6,8 +6,8 @@
   "dependencies": {
     "@architect/utils": "^3.1.2",
     "@npmcli/package-json": "^2.0.0",
-    "inquirer": "^8.2.4",
-    "semver": "^7.3.7",
-    "yaml": "^2.1.1"
+    "inquirer": "^8.2.5",
+    "semver": "^7.3.8",
+    "yaml": "^2.2.1"
   }
 }
