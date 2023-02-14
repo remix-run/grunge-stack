@@ -22,7 +22,8 @@
   "prettier": {},
   "eslintIgnore": [
     "/node_modules",
-    "/server/build",
+    "/server/build/index.js",
+    "/server/build/index.js.map",
     "/public/build"
   ],
   "dependencies": {
