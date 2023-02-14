@@ -1,5 +1,5 @@
 import { createRequestHandler } from "@remix-run/architect";
-import * as serverBuild from "@remix-run/dev/server-build";
+import * as serverBuild from "./build/index.js";
 
 if (process.env.NODE_ENV !== "production") {
   import("./mocks/index.js");

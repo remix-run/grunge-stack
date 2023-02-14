@@ -7,7 +7,7 @@ module.exports = {
   assetsBuildDirectory: "public/build",
   serverBuildPath: "server/build/index.js",
   publicPath: "/_static/build/",
-  server: "server/index.mjs",
+  serverDependenciesToBundle: [/.*/],
   ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
   future: {
     unstable_dev: true,
