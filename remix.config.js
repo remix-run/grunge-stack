@@ -1,16 +1,17 @@
 const path = require("path");
 
-/**
- * @type {import('@remix-run/dev').AppConfig}
- */
+/** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
   appDirectory: "app",
   cacheDirectory: "./node_modules/.cache/remix",
   assetsBuildDirectory: "public/build",
+  serverBuildPath: "server/build/index.js",
   publicPath: "/_static/build/",
-  serverBuildTarget: "arc",
-  server: "./server.ts",
+  serverDependenciesToBundle: [/.*/],
   ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
+  future: {
+    unstable_dev: true,
+  },
   routes(defineRoutes) {
     return defineRoutes((route) => {
       if (process.env.NODE_ENV === "production") return;

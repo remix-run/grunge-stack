@@ -9,7 +9,7 @@
     "dev": "run-p dev:*",
     "dev:arc": "node ./dev sandbox",
     "dev:css": "npm run generate:css -- --watch",
-    "dev:remix": "remix watch",
+    "dev:remix": "remix dev",
     "format": "prettier --write .",
     "generate:css": "tailwindcss -o ./app/styles/tailwind.css",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
@@ -22,7 +22,7 @@
   "prettier": {},
   "eslintIgnore": [
     "/node_modules",
-    "/server/index.js",
+    "/server/build",
     "/public/build"
   ],
   "dependencies": {

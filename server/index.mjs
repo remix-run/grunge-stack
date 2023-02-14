@@ -1,11 +1,11 @@
 import { createRequestHandler } from "@remix-run/architect";
-import * as build from "@remix-run/dev/server-build";
+import * as serverBuild from "./build/index.js";
 
 if (process.env.NODE_ENV !== "production") {
-  require("./mocks");
+  import("./mocks/index.js");
 }
 
 export const handler = createRequestHandler({
-  build,
+  build: serverBuild,
   mode: process.env.NODE_ENV,
 });
