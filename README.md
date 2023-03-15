@@ -29,9 +29,9 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
 
 - This step only applies if you've opted out of having the CLI install dependencies for you:
 
-   ```sh
-   npx remix init
-   ```
+  ```sh
+  npx remix init
+  ```
 
 - Validate the app has been set up properly (optional):
 
