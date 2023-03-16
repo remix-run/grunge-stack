@@ -9,6 +9,9 @@ module.exports = {
   publicPath: "/_static/build/",
   server: "./server.ts",
   serverBuildPath: "server/index.js",
+  future: {
+    v2_meta: true,
+  },
   routes(defineRoutes) {
     return defineRoutes((route) => {
       if (process.env.NODE_ENV === "production") return;
