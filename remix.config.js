@@ -1,8 +1,6 @@
 const path = require("path");
 
-/**
- * @type {import('@remix-run/dev').AppConfig}
- */
+/** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
   cacheDirectory: "./node_modules/.cache/remix",
   ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
@@ -11,6 +9,7 @@ module.exports = {
   serverBuildPath: "server/index.js",
   future: {
     v2_meta: true,
+    v2_normalizeFormMethod: true,
   },
   routes(defineRoutes) {
     return defineRoutes((route) => {
