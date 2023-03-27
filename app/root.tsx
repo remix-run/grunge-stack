@@ -1,4 +1,4 @@
-import type { LinksFunction, LoaderFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Links,
@@ -20,14 +20,8 @@ export const links: LinksFunction = () => {
   ];
 };
 
-type LoaderData = {
-  user: Awaited<ReturnType<typeof getUser>>;
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
-  return json<LoaderData>({
-    user: await getUser(request),
-  });
+export const loader = async ({ request }: LoaderArgs) => {
+  return json({ user: await getUser(request) });
 };
 
 export default function App() {
