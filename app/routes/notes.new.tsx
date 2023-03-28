@@ -1,7 +1,7 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
-import * as React from "react";
+import { useEffect, useRef } from "react";
 
 import { createNote } from "~/models/note.server";
 import { requireUserId } from "~/session.server";
@@ -27,17 +27,17 @@ export const action = async ({ request }: ActionArgs) => {
     );
   }
 
-  const note = await createNote({ title, body, userId });
+  const note = await createNote({ body, title, userId });
 
   return redirect(`/notes/${note.id}`);
 };
 
 export default function NewNotePage() {
   const actionData = useActionData<typeof action>();
-  const titleRef = React.useRef<HTMLInputElement>(null);
-  const bodyRef = React.useRef<HTMLTextAreaElement>(null);
+  const titleRef = useRef<HTMLInputElement>(null);
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (actionData?.errors?.title) {
       titleRef.current?.focus();
     } else if (actionData?.errors?.body) {
@@ -99,7 +99,7 @@ export default function NewNotePage() {
       <div className="text-right">
         <button
           type="submit"
-          className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+          className="rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
         >
           Save
         </button>

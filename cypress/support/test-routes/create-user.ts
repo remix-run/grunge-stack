@@ -26,10 +26,10 @@ export const action = async ({ request }: ActionArgs) => {
   const user = await createUser(email, "myreallystrongpassword");
 
   return createUserSession({
+    redirectTo: "/",
+    remember: true,
     request,
     userId: user.id,
-    remember: true,
-    redirectTo: "/",
   });
 };
 
