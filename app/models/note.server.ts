@@ -1,10 +1,10 @@
 import arc from "@architect/functions";
-import cuid from "cuid";
+import { createId } from "@paralleldrive/cuid2";
 
 import type { User } from "./user.server";
 
 export type Note = {
-  id: ReturnType<typeof cuid>;
+  id: ReturnType<typeof createId>;
   userId: User["id"];
   title: string;
   body: string;
@@ -62,7 +62,7 @@ export async function createNote({
 
   const result = await db.note.put({
     pk: userId,
-    sk: idToSk(cuid()),
+    sk: idToSk(createId()),
     title: title,
     body: body,
   });
