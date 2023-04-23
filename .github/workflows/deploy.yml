@@ -1,10 +1,11 @@
 name: 🚀 Deploy
+
 on:
   push:
     branches:
       - main
       - dev
-  pull_request: {}
+  pull_request:
 
 permissions:
   actions: write
@@ -28,12 +29,12 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          cache: npm
+          cache-dependency-path: ./package.json
+          node-version: 18
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: 📥 Install deps
+        run: npm install
 
       - name: 🔬 Lint
         run: npm run lint
@@ -51,12 +52,12 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          cache: npm
+          cache-dependency-path: ./package.json
+          node-version: 18
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: 📥 Install deps
+        run: npm install
 
       - name: 🔎 Type check
         run: npm run typecheck --if-present
@@ -74,12 +75,12 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          cache: npm
+          cache-dependency-path: ./package.json
+          node-version: 18
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: 📥 Install deps
+        run: npm install
 
       - name: ⚡ Run vitest
         run: npm run test -- --coverage
@@ -100,12 +101,12 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          cache: npm
+          cache-dependency-path: ./package.json
+          node-version: 18
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: 📥 Install deps
+        run: npm install
 
       - name: 🏗 Build
         run: npm run build
@@ -132,7 +133,9 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          cache: npm
+          cache-dependency-path: ./package.json
+          node-version: 18
 
       - name: 👀 Env
         run: |
@@ -143,10 +146,8 @@ jobs:
           VER=`node --version`; echo "Node ver:   $VER"
           VER=`npm --version`; echo "npm ver:    $VER"
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: 📥 Install deps
+        run: npm install
 
       - name: 🏗 Build
         run: npm run build
