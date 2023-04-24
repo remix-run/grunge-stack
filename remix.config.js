@@ -19,7 +19,7 @@ module.exports = {
 
       console.log("⚠️  Test routes enabled.");
 
-      let appDir = path.join(__dirname, "app");
+      const appDir = path.join(__dirname, "app");
 
       route(
         "__tests/create-user",
