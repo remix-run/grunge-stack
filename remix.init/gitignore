@@ -9,5 +9,3 @@ sam.yaml
 
 /cypress/screenshots
 /cypress/videos
-
-/app/styles/tailwind.css

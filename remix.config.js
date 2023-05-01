@@ -9,10 +9,12 @@ module.exports = {
     v2_normalizeFormMethod: true,
     v2_routeConvention: true,
   },
-  ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
+  ignoredRouteFiles: ["**/.*", "**/*.test.{js,jsx,ts,tsx}"],
   publicPath: "/_static/build/",
+  postcss: true,
   server: "./server.ts",
   serverBuildPath: "server/index.js",
+  tailwind: true,
   routes(defineRoutes) {
     return defineRoutes((route) => {
       if (process.env.NODE_ENV === "production") return;
