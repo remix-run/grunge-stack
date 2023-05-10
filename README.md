@@ -27,10 +27,13 @@ Not a fan of bits of the stack? Fork it, change it, and use `npx create-remix --
 
 ## Development
 
-- This step only applies if you've opted out of having the CLI install dependencies for you:
+- First run this stack's `remix.init` script and commit the changes it makes to your project.
 
   ```sh
   npx remix init
+  git init # if you haven't already
+  git add .
+  git commit -m "Initialize project"
   ```
 
 - Validate the app has been set up properly (optional):

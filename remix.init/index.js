@@ -166,16 +166,28 @@ const main = async ({ isTypeScript, packageManager, rootDirectory }) => {
 
   updatePackageJson({ APP_NAME, isTypeScript, packageJson });
 
+  const initInstructions = `
+- First run this stack's \`remix.init\` script and commit the changes it makes to your project.
+
+  \`\`\`sh
+  npx remix init
+  git init # if you haven't already
+  git add .
+  git commit -m "Initialize project"
+  \`\`\`
+`;
+
+  const newReadme = readme
+    .replace(new RegExp("RemixGrungeStack", "g"), toLogicalID(APP_NAME))
+    .replace(initInstructions, "");
+
   const fileOperationPromises = [
     fs.writeFile(
       APP_ARC_PATH,
       appArc.replace("grunge-stack-template", APP_NAME)
     ),
     fs.writeFile(ENV_PATH, newEnv),
-    fs.writeFile(
-      README_PATH,
-      readme.replace(new RegExp("RemixGrungeStack", "g"), toLogicalID(APP_NAME))
-    ),
+    fs.writeFile(README_PATH, newReadme),
     packageJson.save(),
     fs.copyFile(
       path.join(rootDirectory, "remix.init", "gitignore"),
