@@ -53,6 +53,7 @@
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^3.1.0",
     "@vitest/coverage-c8": "^0.30.1",
+    "autoprefixer": "^10.4.14",
     "c8": "^7.13.0",
     "cross-env": "^7.0.3",
     "cypress": "^12.10.0",
