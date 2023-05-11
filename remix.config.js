@@ -14,6 +14,7 @@ module.exports = {
   postcss: true,
   server: "./server.ts",
   serverBuildPath: "server/index.js",
+  serverModuleFormat: "cjs",
   tailwind: true,
   routes(defineRoutes) {
     return defineRoutes((route) => {
