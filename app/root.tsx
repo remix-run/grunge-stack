@@ -16,8 +16,6 @@ import stylesheet from "~/tailwind.css";
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-  // NOTE: Architect deploys the public directory to /_static/
-  { rel: "icon", href: "/_static/favicon.ico" },
 ];
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -30,6 +28,7 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="icon" href="/_static/favicon.ico" />
         <Meta />
         <Links />
       </head>
