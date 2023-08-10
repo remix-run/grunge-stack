@@ -1,6 +1,10 @@
 @app
 grunge-stack-template
 
+# @aws
+# region us-east-2
+# profile default
+
 @http
 /*
   method any
