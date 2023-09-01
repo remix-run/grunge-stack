@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev --no-restart -c \"npm run dev:serve\"",
+    "dev": "remix dev --manual -c \"npm run dev:serve\"",
     "dev:serve": "node ./dev sandbox -e testing",
     "format": "prettier --write .",
     "format:repo": "npm run format && npm run lint:repo -- --fix",
