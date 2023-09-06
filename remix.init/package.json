@@ -5,9 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "@architect/utils": "^3.1.9",
-    "@npmcli/package-json": "^2.0.0",
+    "@npmcli/package-json": "^5.0.0",
     "inquirer": "^8.2.6",
-    "semver": "^7.5.4",
-    "yaml": "^2.3.1"
+    "semver": "^7.5.4"
   }
 }

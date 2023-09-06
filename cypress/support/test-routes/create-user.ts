@@ -1,10 +1,10 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 
 import { createUser } from "~/models/user.server";
 import { createUserSession } from "~/session.server";
 
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   if (process.env.NODE_ENV === "production") {
     console.error(
       "🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 test routes should not be enabled in production 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨",
