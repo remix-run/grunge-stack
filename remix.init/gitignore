@@ -1,9 +1,9 @@
 node_modules
 
-/server/index.js
-/server/index.js.map
-/server/metafile.*
 /public/build
+/server/index.mjs
+/server/index.mjs.map
+/server/metafile.*
 preferences.arc
 sam.json
 sam.yaml
