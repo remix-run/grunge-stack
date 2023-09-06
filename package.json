@@ -4,9 +4,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
-    "dev": "run-p dev:*",
-    "dev:arc": "node ./dev sandbox",
-    "dev:remix": "remix watch",
+    "dev": "remix dev --manual -c \"arc sandbox -e testing\"",
     "format": "prettier --write .",
     "format:repo": "npm run format && npm run lint:repo -- --fix",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
