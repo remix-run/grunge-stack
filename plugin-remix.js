@@ -21,7 +21,7 @@ export default {
       lastTimeout = setTimeout(async () => {
         const contents = fs.readFileSync(
           path.resolve(process.cwd(), buildPath),
-          "utf8"
+          "utf8",
         );
         const manifestMatches = contents.matchAll(/manifest-([A-f0-9]+)\.js/g);
         const sent = new Set();
@@ -41,7 +41,7 @@ export default {
       const passthruKeys = /^NODE_ENV$|^REMIX_DEV_/;
       return {
         testing: Object.fromEntries(
-          Object.entries(process.env).filter(([key]) => passthruKeys.test(key))
+          Object.entries(process.env).filter(([key]) => passthruKeys.test(key)),
         ),
       };
     },
