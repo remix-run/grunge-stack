@@ -8,6 +8,9 @@ pnpm-lock.yml
 node_modules
 
 /public/build
+/server/index.mjs
+/server/index.mjs.map
+/server/metafile.*
 preferences.arc
 sam.json
 sam.yaml

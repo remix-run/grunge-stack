@@ -2,13 +2,15 @@
   "name": "grunge-stack-template",
   "private": true,
   "sideEffects": false,
+  "type": "module",
   "scripts": {
     "build": "remix build",
     "dev": "remix dev --manual -c \"arc sandbox -e testing\"",
     "format": "prettier --write .",
     "format:repo": "npm run format && npm run lint:repo -- --fix",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "lint:repo": "npm run lint -- --config ./.eslintrc.repo.js",
+    "lint:repo": "npm run lint -- --config ./.eslintrc.repo.cjs",
+    "start": "cross-env NODE_ENV=production arc sandbox",
     "test": "vitest",
     "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"npx cypress open\"",
     "test:e2e:run": "cross-env PORT=8811 start-server-and-test dev http://localhost:8811 \"npx cypress run\"",
@@ -75,6 +77,6 @@
     "vitest": "^0.34.2"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=14.0.0"
   }
 }
