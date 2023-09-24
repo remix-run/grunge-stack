@@ -2,7 +2,7 @@
 grunge-stack-template
 
 @aws
-runtime nodejs16.x
+runtime nodejs18.x
 # concurrency 1
 # memory 1152
 # profile default
