@@ -3,17 +3,17 @@ import { createId } from "@paralleldrive/cuid2";
 
 import type { User } from "./user.server";
 
-export type Note = {
+export interface Note {
   id: ReturnType<typeof createId>;
   userId: User["id"];
   title: string;
   body: string;
-};
+}
 
-type NoteItem = {
+interface NoteItem {
   pk: User["id"];
   sk: `note#${Note["id"]}`;
-};
+}
 
 const skToId = (sk: NoteItem["sk"]): Note["id"] => sk.replace(/^note#/, "");
 const idToSk = (id: Note["id"]): NoteItem["sk"] => `note#${id}`;

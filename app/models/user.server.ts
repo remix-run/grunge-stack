@@ -2,8 +2,13 @@ import arc from "@architect/functions";
 import bcrypt from "bcryptjs";
 import invariant from "tiny-invariant";
 
-export type User = { id: `email#${string}`; email: string };
-export type Password = { password: string };
+export interface User {
+  id: `email#${string}`;
+  email: string;
+}
+export interface Password {
+  password: string;
+}
 
 export async function getUserById(id: User["id"]): Promise<User | null> {
   const db = await arc.tables();

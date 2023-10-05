@@ -76,7 +76,6 @@ module.exports = {
         "prettier",
       ],
       rules: {
-        "@typescript-eslint/consistent-type-definitions": ["error", "type"],
         "import/order": [
           "error",
           {
