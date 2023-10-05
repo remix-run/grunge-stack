@@ -39,7 +39,7 @@ export async function getNote({
 
 export async function getNoteListItems({
   userId,
-}: Pick<Note, "userId">): Promise<Array<Pick<Note, "id" | "title">>> {
+}: Pick<Note, "userId">): Promise<Pick<Note, "id" | "title">[]> {
   const db = await arc.tables();
 
   const result = await db.note.query({
@@ -47,6 +47,7 @@ export async function getNoteListItems({
     ExpressionAttributeValues: { ":pk": userId },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return result.Items.map((n: any) => ({
     title: n.title,
     id: skToId(n.sk),

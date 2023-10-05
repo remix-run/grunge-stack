@@ -43,34 +43,6 @@ const getPackageManagerVersion = (packageManager) =>
 
 const getRandomString = (length) => crypto.randomBytes(length).toString("hex");
 
-const removeUnusedDependencies = (dependencies, unusedDependencies) =>
-  Object.fromEntries(
-    Object.entries(dependencies).filter(
-      ([key]) => !unusedDependencies.includes(key),
-    ),
-  );
-
-const updatePackageJson = ({ APP_NAME, packageJson }) => {
-  const {
-    devDependencies,
-    scripts: {
-      "format:repo": _repoFormatScript,
-      "lint:repo": _repoLintScript,
-      ...scripts
-    },
-  } = packageJson.content;
-
-  packageJson.update({
-    name: APP_NAME,
-    devDependencies: removeUnusedDependencies(
-      devDependencies,
-      // packages that are only used for linting the repo
-      ["eslint-plugin-markdown", "eslint-plugin-prefer-let"],
-    ),
-    scripts,
-  });
-};
-
 const main = async ({ packageManager, rootDirectory }) => {
   const APP_ARC_PATH = path.join(rootDirectory, "./app.arc");
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
@@ -95,8 +67,6 @@ const main = async ({ packageManager, rootDirectory }) => {
     /^SESSION_SECRET=.*$/m,
     `SESSION_SECRET="${getRandomString(16)}"`,
   );
-
-  updatePackageJson({ APP_NAME, packageJson });
 
   const initInstructions = `
 - First run this stack's \`remix.init\` script and commit the changes it makes to your project.
@@ -133,7 +103,6 @@ const main = async ({ packageManager, rootDirectory }) => {
     fs.rm(path.join(rootDirectory, ".github", "workflows", "no-response.yml")),
     fs.rm(path.join(rootDirectory, ".github", "dependabot.yml")),
     fs.rm(path.join(rootDirectory, ".github", "PULL_REQUEST_TEMPLATE.md")),
-    fs.rm(path.join(rootDirectory, ".eslintrc.repo.cjs")),
     fs.rm(path.join(rootDirectory, "LICENSE.md")),
   ]);
 
