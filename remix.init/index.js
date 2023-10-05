@@ -43,6 +43,21 @@ const getPackageManagerVersion = (packageManager) =>
 
 const getRandomString = (length) => crypto.randomBytes(length).toString("hex");
 
+const updatePackageJson = ({ APP_NAME, packageJson }) => {
+  const {
+    scripts: {
+      // eslint-disable-next-line no-unused-vars
+      "format:repo": _repoFormatScript,
+      ...scripts
+    },
+  } = packageJson.content;
+
+  packageJson.update({
+    name: APP_NAME,
+    scripts,
+  });
+};
+
 const main = async ({ packageManager, rootDirectory }) => {
   const APP_ARC_PATH = path.join(rootDirectory, "./app.arc");
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
@@ -82,6 +97,8 @@ const main = async ({ packageManager, rootDirectory }) => {
   const newReadme = readme
     .replace(new RegExp("RemixGrungeStack", "g"), toLogicalID(APP_NAME))
     .replace(initInstructions, "");
+
+  updatePackageJson({ APP_NAME, packageJson });
 
   await Promise.all([
     fs.writeFile(
