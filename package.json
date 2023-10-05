@@ -6,7 +6,8 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev --manual -c \"arc sandbox -e testing\"",
-    "format": "prettier --write . && npm run lint -- --fix",
+    "format": "prettier --write .",
+    "format:repo": "npm run format && npm run lint -- --fix",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "cross-env NODE_ENV=production arc sandbox",
     "test": "vitest",
