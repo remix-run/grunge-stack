@@ -3,17 +3,17 @@ import { createId } from "@paralleldrive/cuid2";
 
 import type { User } from "./user.server";
 
-export type Note = {
+export interface Note {
   id: ReturnType<typeof createId>;
   userId: User["id"];
   title: string;
   body: string;
-};
+}
 
-type NoteItem = {
+interface NoteItem {
   pk: User["id"];
   sk: `note#${Note["id"]}`;
-};
+}
 
 const skToId = (sk: NoteItem["sk"]): Note["id"] => sk.replace(/^note#/, "");
 const idToSk = (id: Note["id"]): NoteItem["sk"] => `note#${id}`;
@@ -39,7 +39,7 @@ export async function getNote({
 
 export async function getNoteListItems({
   userId,
-}: Pick<Note, "userId">): Promise<Array<Pick<Note, "id" | "title">>> {
+}: Pick<Note, "userId">): Promise<Pick<Note, "id" | "title">[]> {
   const db = await arc.tables();
 
   const result = await db.note.query({
@@ -47,6 +47,7 @@ export async function getNoteListItems({
     ExpressionAttributeValues: { ":pk": userId },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return result.Items.map((n: any) => ({
     title: n.title,
     id: skToId(n.sk),
