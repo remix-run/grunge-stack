@@ -1,16 +1,15 @@
-import { rest } from "msw";
+import { http, passthrough } from "msw";
 import { setupServer } from "msw/node";
 
 // put one-off handlers that don't really need an entire file to themselves here
 const miscHandlers = [
-  rest.post(`${process.env.REMIX_DEV_HTTP_ORIGIN}/ping`, (req) =>
-    req.passthrough(),
-  ),
+  http.post(`${process.env.REMIX_DEV_HTTP_ORIGIN}/ping`, () => passthrough()),
 ];
 
 const server = setupServer(...miscHandlers);
 
 server.listen({ onUnhandledRequest: "bypass" });
+console.info("🔶 Mock server running");
 
 process.once("SIGINT", () => server.close());
 process.once("SIGTERM", () => server.close());

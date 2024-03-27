@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@architect/utils": "^3.1.9",
+    "@architect/utils": "^4.0.4",
     "@npmcli/package-json": "^5.0.0",
     "inquirer": "^8.2.6",
-    "semver": "^7.5.4"
+    "semver": "^7.6.0"
   }
 }
