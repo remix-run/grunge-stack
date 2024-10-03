@@ -7,6 +7,6 @@
     "@architect/utils": "^4.0.6",
     "@npmcli/package-json": "^5.2.1",
     "inquirer": "^8.2.6",
-    "semver": "^7.6.2"
+    "semver": "^7.6.3"
   }
 }
